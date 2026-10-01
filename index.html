@@ -60,7 +60,15 @@
 <div class="section-head"><div><span class="index">06 / DIVISION REVIEWS</span><h2>HEAR FROM<br><em>THE RANKS.</em></h2></div><p>Verified personnel can share their experience with the 82nd Airborne Division. Roblox account verification is required to submit a review.</p></div>
 <div class="reviews-panel">
 <div class="reviews-top"><div><span class="review-kicker">COMMUNITY FEEDBACK</span><h3>DIVISION REVIEWS</h3></div><button class="btn red review-login" type="button">SIGN IN WITH ROBLOX <b>↗</b></button></div>
-<div class="review-notice"><span class="review-mark">✓</span><div><strong>ROBLOX VERIFICATION REQUIRED</strong><p>Reviews will be tied to a verified Roblox account so visitors can see who posted them. New reviews can also be moderated before appearing publicly.</p></div></div>
+<div class="review-notice"><span class="review-mark">✓</span><div><strong>ROBLOX MEMBERSHIP VERIFICATION</strong><p>Enter your Roblox username to verify that the account exists and is a member of Zanance's USAR. Reviews are moderated before publication.</p></div></div>
+<div class="review-form" id="review-form">
+  <div class="review-fields">
+    <label><span>ROBLOX USERNAME</span><input id="roblox-username" type="text" maxlength="50" autocomplete="off" placeholder="Enter Roblox username"></label>
+    <label><span>RATING</span><select id="review-rating"><option value="5">5 / 5</option><option value="4">4 / 5</option><option value="3">3 / 5</option><option value="2">2 / 5</option><option value="1">1 / 5</option></select></label>
+  </div>
+  <label class="review-message"><span>YOUR REVIEW</span><textarea id="review-text" maxlength="1000" placeholder="Share your experience with the 82nd Airborne Division..."></textarea></label>
+  <div class="review-actions"><button class="btn red" id="verify-review" type="button">VERIFY & SUBMIT <b>↗</b></button><span id="review-status" role="status"></span></div>
+</div>
 <div class="review-list">
 <article class="review-empty"><span>NO REVIEWS PUBLISHED YET</span><strong>BE THE FIRST TO SHARE YOUR EXPERIENCE.</strong></article>
 </div>
@@ -83,5 +91,84 @@
 <footer><strong>82ND AIRBORNE DIVISION</strong><span>DEATH FROM ABOVE // ALL AMERICAN // ZANANCE'S USAR</span></footer>
 <script>
 document.querySelectorAll('.poster').forEach((p,i)=>p.style.setProperty('--d', (i*1.3)+'s'));
+const SUPABASE_URL = 'https://ypmflmivzjptkitqdowj.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_7u7ow0A7-YbvgLOc_r8StQ_MENpi4uj';
+const USAR_GROUP_ID = 3108077;
+
+const reviewButton = document.getElementById('verify-review');
+const reviewStatus = document.getElementById('review-status');
+const reviewList = document.querySelector('.review-list');
+
+function setReviewStatus(message, good=false){
+  reviewStatus.textContent = message;
+  reviewStatus.className = good ? 'good' : '';
+}
+
+async function robloxUser(username){
+  const res = await fetch('https://users.roblox.com/v1/usernames/users', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({usernames:[username.trim()], excludeBannedUsers:false})
+  });
+  if(!res.ok) throw new Error('Roblox lookup failed.');
+  const data = await res.json();
+  return data.data && data.data[0] ? data.data[0] : null;
+}
+
+async function isUsarMember(userId){
+  const res = await fetch('https://groups.roblox.com/v2/users/'+encodeURIComponent(userId)+'/groups/roles');
+  if(!res.ok) throw new Error('Group lookup failed.');
+  const data = await res.json();
+  return (data.data || []).some(entry => entry.group && Number(entry.group.id) === USAR_GROUP_ID);
+}
+
+async function loadReviews(){
+  try{
+    const res = await fetch(SUPABASE_URL+'/rest/v1/reviews?select=roblox_username,rating,review_text,created_at&status=eq.approved&order=created_at.desc', {
+      headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}
+    });
+    if(!res.ok) throw new Error();
+    const reviews = await res.json();
+    if(!reviews.length) return;
+    reviewList.innerHTML = reviews.map(r => {
+      const stars = '★'.repeat(Number(r.rating))+'☆'.repeat(5-Number(r.rating));
+      const safeName = String(r.roblox_username).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+      const safeText = String(r.review_text).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+      return '<article class="review-card"><div><span class="review-user">@'+safeName+'</span><span class="review-stars">'+stars+'</span></div><p>'+safeText+'</p></article>';
+    }).join('');
+  }catch(e){}
+}
+
+reviewButton.addEventListener('click', async ()=>{
+  const username = document.getElementById('roblox-username').value.trim();
+  const rating = Number(document.getElementById('review-rating').value);
+  const text = document.getElementById('review-text').value.trim();
+  if(!username){ setReviewStatus('Enter your Roblox username.'); return; }
+  if(text.length < 10){ setReviewStatus('Your review must be at least 10 characters.'); return; }
+  reviewButton.disabled = true;
+  setReviewStatus('VERIFYING ROBLOX ACCOUNT...');
+  try{
+    const user = await robloxUser(username);
+    if(!user) throw new Error('Roblox username not found.');
+    setReviewStatus('CHECKING USAR MEMBERSHIP...');
+    const member = await isUsarMember(user.id);
+    if(!member) throw new Error('That account is not a member of Zanance\'s USAR.');
+    setReviewStatus('SUBMITTING FOR MODERATION...');
+    const res = await fetch(SUPABASE_URL+'/rest/v1/reviews', {
+      method:'POST',
+      headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},
+      body:JSON.stringify({user_id:null,roblox_user_id:String(user.id),roblox_username:user.name,rating,review_text:text,status:'pending'})
+    });
+    if(!res.ok) throw new Error('Review submission failed.');
+    setReviewStatus('REVIEW SUBMITTED — PENDING MODERATION.', true);
+    document.getElementById('review-text').value='';
+  }catch(e){
+    setReviewStatus(e.message || 'Verification failed.');
+  }finally{
+    reviewButton.disabled = false;
+  }
+});
+
+loadReviews();
 </script>
 </body></html>
