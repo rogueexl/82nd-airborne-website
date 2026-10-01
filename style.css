@@ -72,3 +72,21 @@ body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wi
 @keyframes airborneDrift{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-10px,0)}}
 @media(max-width:1050px){.panel-jump{right:18%}.airborne-mark{opacity:.7}.airborne-lines{right:12%}}
 @media(max-width:700px){.airborne-panel{display:none}.airborne-mark{right:-30%;opacity:.8}.airborne-sky{left:2%;top:40%}.airborne-lines{right:-10%;opacity:.1}.airborne-footer-mark{right:10px;bottom:10px;font-size:6px}}
+
+/* AIRBORNE DEPLOYMENT LAYER */
+.airborne-dropfield{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.jump-dot{position:absolute;top:-70px;width:42px;height:62px;opacity:.18;animation:freefall 11s linear infinite}
+.jump-dot:before{content:"";position:absolute;left:7px;top:0;width:28px;height:18px;border:1px solid rgba(255,255,255,.8);border-radius:50% 50% 45% 45%;border-bottom:0}
+.jump-dot:after{content:"";position:absolute;left:20px;top:18px;width:1px;height:28px;background:rgba(255,255,255,.8);box-shadow:-10px 0 0 rgba(255,255,255,.45),10px 0 0 rgba(255,255,255,.45)}
+.jump-dot .body{position:absolute;left:17px;top:43px;width:7px;height:13px;border-radius:5px;background:rgba(255,255,255,.7)}
+.jump-1{left:18%;animation-duration:13s}.jump-2{left:47%;animation-delay:-6s;animation-duration:15s}.jump-3{right:18%;animation-delay:-9s;animation-duration:12s}
+.airborne-radar{position:absolute;right:11%;top:34%;width:230px;height:230px;border:1px solid rgba(98,230,255,.12);border-radius:50%;opacity:.5}
+.airborne-radar:before,.airborne-radar:after{content:"";position:absolute;inset:20px;border:1px solid rgba(98,230,255,.08);border-radius:50%}
+.airborne-radar:after{inset:50%;width:1px;height:100%;background:rgba(98,230,255,.1);transform:translate(-50%,-50%) rotate(45deg);transform-origin:center}
+.airborne-radar .sweep{position:absolute;left:50%;top:50%;width:50%;height:1px;background:linear-gradient(90deg,rgba(98,230,255,.7),transparent);transform-origin:left center;animation:radarSweep 5s linear infinite}
+.airborne-coords{position:absolute;left:7%;top:17%;font:700 7px Inter;letter-spacing:2px;line-height:2;color:rgba(180,199,214,.22)}
+.airborne-coords b{color:rgba(98,230,255,.45);font-weight:800}
+.airborne-stamp{position:absolute;right:5%;bottom:12%;padding:8px 10px;border:1px solid rgba(255,255,255,.08);font:800 7px Inter;letter-spacing:2px;color:rgba(255,255,255,.25);transform:rotate(-4deg)}
+@keyframes freefall{0%{transform:translateY(0) rotate(-4deg);opacity:0}10%{opacity:.2}50%{transform:translateY(520px) translateX(25px) rotate(5deg)}90%{opacity:.12}100%{transform:translateY(980px) translateX(-10px) rotate(-2deg);opacity:0}}
+@keyframes radarSweep{to{transform:rotate(360deg)}}
+@media(max-width:700px){.airborne-radar{right:-80px;top:38%;opacity:.25}.airborne-coords{left:3%;top:20%}.jump-dot{opacity:.1}}
