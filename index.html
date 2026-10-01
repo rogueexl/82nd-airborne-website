@@ -120,7 +120,7 @@ async function loadReviews(){
       const userId = encodeURIComponent(String(r.roblox_user_id || ''));
       const avatar = userId ? REVIEW_FUNCTION_URL+'?userId='+userId : '';
       const avatarMarkup = avatar ? '<img class="review-avatar" src="'+avatar+'" alt="'+safeName+' Roblox avatar" loading="lazy" onerror="this.style.display=\'none\'">' : '';
-      return '<article class="review-card"><div class="review-card-main"><div class="review-copy"><div><span class="review-user">@'+safeName+'</span><span class="review-stars">'+stars+'</span></div><p>'+safeText+'</p></div>'+avatarMarkup+'</div></article>';
+      return '<article class="review-card"><div class="review-card-main">'+avatarMarkup+'<div class="review-copy"><div><span class="review-user">@'+safeName+'</span><span class="review-stars">'+stars+'</span></div><p>'+safeText+'</p></div></div></article>';
     }).join('');
   }catch(e){}
 }
