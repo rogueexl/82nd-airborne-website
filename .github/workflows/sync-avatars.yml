@@ -1,0 +1,51 @@
+name: Sync Roblox Avatars
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  avatars:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Roblox avatars
+        shell: bash
+        run: |
+          set -e
+          mkdir -p images/avatars
+          ids="499090031,497963338,1782363768,1722244139,1555400491,5312628624,3142673263,1765287417,948870469,3957797498"
+          curl -fsSL "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=$ids&size=420x420&format=Png&isCircular=false" -o /tmp/avatars.json
+          jq -r '.data[] | [.targetId, .imageUrl] | @tsv' /tmp/avatars.json | while IFS=$'\t' read -r id url; do
+            case "$id" in
+              499090031) name="evnxl";;
+              497963338) name="Dannyxl05";;
+              1782363768) name="DushiNL0";;
+              1722244139) name="Chocooza";;
+              1555400491) name="XxrealAntCrewXx";;
+              5312628624) name="smith0dev";;
+              3142673263) name="rogueexl";;
+              1765287417) name="dabbbbaa22";;
+              948870469) name="EnjoyCash";;
+              3957797498) name="Evader19237iwiw";;
+            esac
+            curl -fsSL "$url" -o "images/avatars/$name.png"
+          done
+
+      - name: Commit updated avatars
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/avatars
+          if git diff --cached --quiet; then
+            echo "No avatar changes."
+          else
+            git commit -m "Sync Roblox avatar images"
+            git push
+          fi
