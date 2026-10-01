@@ -93,7 +93,7 @@
 document.querySelectorAll('.poster').forEach((p,i)=>p.style.setProperty('--d', (i*1.3)+'s'));
 const SUPABASE_URL = 'https://ypmflmivzjptkitqdowj.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_7u7ow0A7-YbvgLOc_r8StQ_MENpi4uj';
-const USAR_GROUP_ID = 3108077;
+const REVIEW_FUNCTION_URL = SUPABASE_URL + '/functions/v1/verify-review';
 
 const reviewButton = document.getElementById('verify-review');
 const reviewStatus = document.getElementById('review-status');
@@ -102,24 +102,6 @@ const reviewList = document.querySelector('.review-list');
 function setReviewStatus(message, good=false){
   reviewStatus.textContent = message;
   reviewStatus.className = good ? 'good' : '';
-}
-
-async function robloxUser(username){
-  const res = await fetch('https://users.roblox.com/v1/usernames/users', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({usernames:[username.trim()], excludeBannedUsers:false})
-  });
-  if(!res.ok) throw new Error('Roblox lookup failed.');
-  const data = await res.json();
-  return data.data && data.data[0] ? data.data[0] : null;
-}
-
-async function isUsarMember(userId){
-  const res = await fetch('https://groups.roblox.com/v2/users/'+encodeURIComponent(userId)+'/groups/roles');
-  if(!res.ok) throw new Error('Group lookup failed.');
-  const data = await res.json();
-  return (data.data || []).some(entry => entry.group && Number(entry.group.id) === USAR_GROUP_ID);
 }
 
 async function loadReviews(){
@@ -143,23 +125,33 @@ reviewButton.addEventListener('click', async ()=>{
   const username = document.getElementById('roblox-username').value.trim();
   const rating = Number(document.getElementById('review-rating').value);
   const text = document.getElementById('review-text').value.trim();
+
   if(!username){ setReviewStatus('Enter your Roblox username.'); return; }
   if(text.length < 10){ setReviewStatus('Your review must be at least 10 characters.'); return; }
+
   reviewButton.disabled = true;
   setReviewStatus('VERIFYING ROBLOX ACCOUNT...');
+
   try{
-    const user = await robloxUser(username);
-    if(!user) throw new Error('Roblox username not found.');
-    setReviewStatus('CHECKING USAR MEMBERSHIP...');
-    const member = await isUsarMember(user.id);
-    if(!member) throw new Error('That account is not a member of Zanance\'s USAR.');
-    setReviewStatus('SUBMITTING FOR MODERATION...');
-    const res = await fetch(SUPABASE_URL+'/rest/v1/reviews', {
+    const res = await fetch(REVIEW_FUNCTION_URL, {
       method:'POST',
-      headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},
-      body:JSON.stringify({user_id:null,roblox_user_id:String(user.id),roblox_username:user.name,rating,review_text:text,status:'pending'})
+      headers:{
+        apikey:SUPABASE_KEY,
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        username,
+        rating,
+        review_text:text
+      })
     });
-    if(!res.ok) throw new Error('Review submission failed.');
+
+    const data = await res.json().catch(()=>({}));
+
+    if(!res.ok){
+      throw new Error(data.error || 'Review verification failed.');
+    }
+
     setReviewStatus('REVIEW SUBMITTED — PENDING MODERATION.', true);
     document.getElementById('review-text').value='';
   }catch(e){
