@@ -163,3 +163,32 @@ body.modal-open{overflow:hidden}
 .news-read:hover{color:#fff}
 @media(max-width:900px){.news-grid{grid-template-columns:1fr 1fr}.news-feature{grid-column:1/-1}}
 @media(max-width:650px){.news{padding:80px 0}.news-grid{grid-template-columns:1fr;gap:14px}.news-card,.news-feature{min-height:320px;padding:25px}.news-feature{grid-column:auto}.news-card:not(.news-feature) h3{font-size:38px}.news-read{left:25px;bottom:24px}}
+
+/* Refined news presentation */
+.news{position:relative;overflow:hidden}
+.news:before{content:"NEWS // 82ND";position:absolute;right:-20px;top:85px;font:900 150px/.7 'Barlow Condensed';letter-spacing:-8px;color:rgba(255,255,255,.018);pointer-events:none;white-space:nowrap}
+.news .section-head{position:relative;z-index:2;margin-bottom:12px}
+.news-grid{position:relative;z-index:2;grid-template-columns:1.6fr 1fr;grid-template-rows:auto auto;gap:16px}
+.news-feature{grid-row:1 / span 2;min-height:520px;padding:38px;display:flex;flex-direction:column;justify-content:flex-start}
+.news-feature .news-meta{border-bottom:1px solid rgba(255,255,255,.09);padding-bottom:16px}
+.news-feature h3{font-size:clamp(48px,5.5vw,78px);margin:65px 0 24px;max-width:680px}
+.news-feature p{max-width:610px;font-size:14px}
+.news-card:not(.news-feature){min-height:252px;padding:28px 30px}
+.news-card:not(.news-feature) h3{font-size:38px;margin:34px 0 15px}
+.news-card:not(.news-feature) p{font-size:12px;line-height:1.7}
+.news-card:before{background:radial-gradient(circle at 100% 0,rgba(61,140,255,.12),transparent 48%),linear-gradient(145deg,rgba(255,255,255,.035),transparent 65%)}
+.news-feature:before{background:radial-gradient(circle at 100% 0,rgba(61,140,255,.17),transparent 42%),radial-gradient(circle at 0 100%,rgba(181,43,63,.09),transparent 40%)}
+.news-card:after{width:2px}
+.news-feature:after{width:4px}
+.news-read{transition:.2s}
+.news-read:hover{transform:translateX(4px)}
+@media(max-width:900px){
+  .news-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .news-feature{grid-column:1/-1;grid-row:auto;min-height:420px}
+}
+@media(max-width:650px){
+  .news:before{font-size:90px;top:100px}
+  .news-grid{grid-template-columns:1fr}
+  .news-feature{grid-column:auto;min-height:390px;padding:27px}
+  .news-feature h3{margin-top:48px;font-size:52px}
+}
