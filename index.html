@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>82nd Airborne Division | Zanance's USAR</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="navbar">
+  <div class="navbar-container">
+    <a class="brand" href="#top"><span>82ND</span> AIRBORNE</a>
+    <nav>
+      <a href="#division">Division</a>
+      <a href="#brigades">Brigades</a>
+      <a href="#leadership">Leadership</a>
+      <a href="#news">News</a>
+      <a href="#recruitment">Recruitment</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="eyebrow">ZANANCE'S USAR</p>
+    <h1>82ND<br><strong>AIRBORNE DIVISION</strong></h1>
+    <p class="hero-copy">Leadership. Teamwork. Development. Participation.</p>
+    <div class="hero-buttons">
+      <a class="btn primary" href="#brigades">Explore Division</a>
+      <a class="btn secondary" href="#recruitment">Join the Division</a>
+    </div>
+  </div>
+</section>
+
+<section id="division" class="section">
+  <div class="section-heading">
+    <p class="eyebrow">THE DIVISION</p>
+    <h2>Built for <span>people who want to contribute.</span></h2>
+    <p>The 82nd Airborne Division is a structured division within Zanance's USAR, built around leadership, teamwork, development, and participation. With multiple brigades and specialized units, members have opportunities to take on leadership roles, participate in organized activities, and contribute to the division.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><strong>04</strong><span>Active Brigades</span></div>
+    <div class="stat"><strong>03</strong><span>Division Command</span></div>
+    <div class="stat"><strong>82ND</strong><span>Airborne Division</span></div>
+  </div>
+</section>
+
+<section id="brigades" class="section dark-section">
+  <div class="section-heading">
+    <p class="eyebrow">ORGANIZATION</p>
+    <h2>Our <span>Brigades</span></h2>
+    <p>Four brigades, each with a distinct purpose within the division.</p>
+  </div>
+  <div class="cards">
+    <a class="card brigade-card" href="brigades/falcon.html">
+      <span class="card-number">01</span><h3>Falcon Brigade</h3>
+      <p>The division's primary MILSIM brigade, focused on tactical operations, structured training, and field readiness.</p><span class="card-link">VIEW BRIGADE →</span>
+    </a>
+    <a class="card brigade-card" href="brigades/panther.html">
+      <span class="card-number">02</span><h3>Panther Brigade</h3>
+      <p>A versatile brigade combining MILSIM operations with driving, combat medic, and search and rescue capabilities.</p><span class="card-link">VIEW BRIGADE →</span>
+    </a>
+    <a class="card brigade-card" href="brigades/black-hats.html">
+      <span class="card-number">03</span><h3>Black Hats Brigade</h3>
+      <p>The division's primary instructional brigade, responsible for preparing and developing future personnel.</p><span class="card-link">VIEW BRIGADE →</span>
+    </a>
+    <a class="card brigade-card" href="brigades/pegasus.html">
+      <span class="card-number">04</span><h3>Pegasus Brigade</h3>
+      <p>An elite competitive brigade dedicated to scrims, TPS, and organized wargames.</p><span class="card-link">VIEW BRIGADE →</span>
+    </a>
+  </div>
+</section>
+
+<section id="leadership" class="section">
+  <div class="section-heading">
+    <p class="eyebrow">COMMAND</p><h2>Division <span>Leadership</span></h2>
+  </div>
+  <div class="leadership-grid">
+    <div class="leader-card"><div class="leader-image"><img data-user-id="499090031" alt="evnxl Roblox Avatar"><span class="avatar-loading">LOADING</span></div><div class="leader-info"><span>COMMANDING OFFICER</span><h3>evnxl</h3></div></div>
+    <div class="leader-card"><div class="leader-image"><img data-user-id="497963338" alt="Dannyxl05 Roblox Avatar"><span class="avatar-loading">LOADING</span></div><div class="leader-info"><span>EXECUTIVE OFFICER</span><h3>Dannyxl05</h3></div></div>
+    <div class="leader-card"><div class="leader-image"><img data-user-id="1782363768" alt="DushiNL0 Roblox Avatar"><span class="avatar-loading">LOADING</span></div><div class="leader-info"><span>DIVISION SERGEANT MAJOR</span><h3>DushiNL0</h3></div></div>
+  </div>
+</section>
+
+<section id="news" class="section dark-section">
+  <div class="section-heading"><p class="eyebrow">LATEST</p><h2>Division <span>News</span></h2><p>Announcements, articles, and important updates from the 82nd.</p></div>
+  <div class="news-placeholder"><span>NEWS & ARTICLES</span><h3>Updates will appear here.</h3><p>The division's latest news and articles will be published here as the site develops.</p></div>
+</section>
+
+<section id="recruitment" class="section recruitment">
+  <div><p class="eyebrow">ENLISTMENT</p><h2>Ready to serve?</h2><p>Join the 82nd Airborne Division and find a role that fits your interests, experience, and goals.</p></div>
+  <a class="btn primary" href="#">RECRUITMENT →</a>
+</section>
+</main>
+
+<footer><div><strong>82ND AIRBORNE DIVISION</strong><span>ZANANCE'S USAR</span></div><p>© 2026 82nd Airborne Division. All rights reserved.</p></footer>
+
+<script>
+document.querySelectorAll('.leader-image img').forEach(image => {
+  const loading = image.parentElement.querySelector('.avatar-loading');
+  const userId = image.dataset.userId;
+  fetch('https://thumbnails.roblox.com/v1/users/avatar?userIds=' + userId + '&size=420x420&format=Png&isCircular=false')
+    .then(r => r.json()).then(data => {
+      if (data.data && data.data[0] && data.data[0].imageUrl) {
+        image.src = data.data[0].imageUrl;
+        image.onload = () => loading.style.display = 'none';
+      } else loading.textContent = 'AVATAR UNAVAILABLE';
+    }).catch(() => loading.textContent = 'AVATAR UNAVAILABLE');
+});
+</script>
+</body>
+</html>
