@@ -1,298 +1,109 @@
-:root{--black:#07090c;--black-light:#0d1117;--black-lighter:#131922;--navy-dark:#101d2d;--navy:#1c4165;--navy-light:#2c5f8d;--maroon-dark:#43141d;--maroon:#681d29;--maroon-light:#8d2b3a;--white:#f5f7fa;--gray:#aab3bf;--gray-dark:#66717e;--line:rgba(255,255,255,.09);--glow:0 0 24px rgba(44,95,141,.25)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--black);color:var(--white);font-family:Arial,Helvetica,sans-serif;line-height:1.6}.navbar{position:sticky;top:0;z-index:50;background:rgba(7,9,12,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.navbar-container{max-width:1250px;margin:auto;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;gap:25px}.brand{color:var(--white);text-decoration:none;font-weight:900;letter-spacing:2px}.brand span{color:#fff}.navbar nav{display:flex;gap:24px}.navbar nav a{color:var(--gray);text-decoration:none;font-size:12px;font-weight:800;letter-spacing:1px;transition:.25s}.navbar nav a:hover{color:#fff;text-shadow:0 0 12px rgba(141,43,58,.8)}.hero{min-height:760px;display:flex;align-items:center;position:relative;overflow:hidden;background:radial-gradient(circle at 75% 40%,rgba(44,95,141,.3),transparent 35%),linear-gradient(120deg,#07090c 0%,#101d2d 65%,#43141d 150%)}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,9,12,.95),rgba(7,9,12,.55),rgba(7,9,12,.15))}.hero-content{position:relative;z-index:2;max-width:1250px;width:100%;margin:auto;padding:80px 28px}.eyebrow{font-size:11px;letter-spacing:4px;font-weight:900;color:#b5c6d7;margin:0 0 12px}.hero h1{font-size:clamp(48px,8vw,104px);line-height:.92;margin:0;font-weight:900;letter-spacing:-3px}.hero h1 strong{color:#b9cce0}.hero-copy{font-size:18px;color:var(--gray);margin:26px 0 34px}.hero-buttons{display:flex;gap:14px;flex-wrap:wrap}.btn{display:inline-block;text-decoration:none;padding:14px 24px;font-size:12px;font-weight:900;letter-spacing:1.5px;border:1px solid var(--line);transition:.25s}.btn.primary{background:var(--maroon);color:#fff}.btn.secondary{background:rgba(255,255,255,.03);color:#fff}.btn:hover{transform:translateY(-3px);box-shadow:0 0 24px rgba(104,29,41,.45);border-color:var(--maroon-light)}.section{max-width:1250px;margin:auto;padding:110px 28px}.dark-section{max-width:none;padding-left:max(28px,calc((100vw - 1194px)/2));padding-right:max(28px,calc((100vw - 1194px)/2));background:var(--black-light)}.section-heading{max-width:800px;margin-bottom:48px}.section-heading h2{font-size:clamp(34px,5vw,58px);line-height:1.05;margin:0 0 18px}.section-heading h2 span{color:#8faecb}.section-heading p:last-child{color:var(--gray);max-width:760px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.stat{padding:28px;background:var(--black-light);border:1px solid var(--line);transition:.25s}.stat:hover{border-color:var(--navy-light);box-shadow:var(--glow);transform:translateY(-4px)}.stat strong{display:block;font-size:34px}.stat span{color:var(--gray);font-size:12px;text-transform:uppercase;letter-spacing:1.5px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{color:inherit;text-decoration:none}.brigade-card{min-height:310px;padding:26px;background:linear-gradient(145deg,var(--black-lighter),#0b1016);border:1px solid var(--line);position:relative;transition:.3s}.brigade-card:hover{transform:translateY(-7px);border-color:var(--navy-light);box-shadow:0 0 30px rgba(44,95,141,.2)}.card-number{color:var(--maroon-light);font-size:11px;font-weight:900;letter-spacing:2px}.brigade-card h3{font-size:25px;margin:55px 0 14px}.brigade-card p{color:var(--gray);font-size:14px}.card-link{position:absolute;bottom:25px;font-size:10px;font-weight:900;letter-spacing:1.5px;color:#b9cce0}.leadership-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.leader-card{background:var(--black-light);border:1px solid var(--line);transition:.3s}.leader-card:hover{transform:translateY(-5px);border-color:var(--maroon-light);box-shadow:0 0 28px rgba(104,29,41,.18)}.leader-image{height:330px;position:relative;overflow:hidden;background:linear-gradient(145deg,#101d2d,#07090c);display:flex;align-items:center;justify-content:center}.leader-image img{width:100%;height:100%;object-fit:contain;object-position:center bottom;transition:.3s}.leader-card:hover .leader-image img{transform:scale(1.04);filter:brightness(1.08)}.avatar-loading{position:absolute;color:var(--gray-dark);font-size:10px;font-weight:900;letter-spacing:2px}.leader-info{padding:22px}.leader-info span{font-size:9px;color:var(--gray-dark);letter-spacing:2px;font-weight:900}.leader-info h3{margin:4px 0 0;font-size:23px}.news-placeholder{padding:42px;border:1px solid var(--line);background:var(--black-lighter)}.news-placeholder span{font-size:10px;letter-spacing:3px;color:var(--maroon-light);font-weight:900}.news-placeholder h3{font-size:28px;margin:10px 0}.news-placeholder p{color:var(--gray)}.recruitment{display:flex;align-items:center;justify-content:space-between;gap:30px;background:linear-gradient(110deg,var(--navy-dark),var(--maroon-dark));max-width:none;padding-left:max(28px,calc((100vw - 1194px)/2));padding-right:max(28px,calc((100vw - 1194px)/2))}.recruitment h2{font-size:clamp(35px,5vw,60px);margin:0}.recruitment p{color:var(--gray);max-width:650px}footer{border-top:1px solid var(--line);padding:30px max(28px,calc((100vw - 1194px)/2));display:flex;justify-content:space-between;gap:20px;color:var(--gray);font-size:11px}footer strong{display:block;color:#fff;letter-spacing:2px}footer span{font-size:9px;letter-spacing:2px}@media(max-width:950px){.cards{grid-template-columns:repeat(2,1fr)}.leadership-grid{grid-template-columns:1fr}.leader-image{height:360px}.navbar nav{gap:12px}}@media(max-width:650px){.navbar-container{padding:15px 18px}.navbar nav{display:none}.hero{min-height:650px}.section{padding:75px 20px}.dark-section,.recruitment{padding-left:20px;padding-right:20px}.stats,.cards{grid-template-columns:1fr}.recruitment{display:block}.recruitment .btn{margin-top:18px}footer{display:block;padding:25px 20px}footer p{margin-top:14px}}
-
-/* =========================================================
-   BRIGADE PAGES
-   ========================================================= */
-
-.brigade-hero {
-    min-height: 72vh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    padding: 110px 4%;
-    background: linear-gradient(110deg,#080b10 0%,#0b1119 55%,#0a0c11 100%);
+:root{
+--black:#07090c;--black-light:#0d1117;--black-lighter:#131922;
+--navy-dark:#101d2d;--navy:#1c4165;--navy-light:#2c5f8d;
+--maroon-dark:#43141d;--maroon:#681d29;--maroon-light:#8d2b3a;
+--white:#f2f4f6;--gray:#a4adb8;--gray-light:#c7cdd4;--gray-dark:#56606c;
+--border:rgba(255,255,255,.09);--border-light:rgba(255,255,255,.14);
+--blue-glow:rgba(44,95,141,.45);--red-glow:rgba(141,43,58,.45)
 }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:Arial,Helvetica,sans-serif;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
 
-.brigade-hero::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 5px;
-    height: 100%;
-    background: var(--maroon);
-    box-shadow: 0 0 14px rgba(141,43,58,.2);
-}
+/* NAVBAR */
+.navbar{position:sticky;top:0;width:100%;padding:18px 4%;background:rgba(7,9,12,.97);border-bottom:1px solid var(--border);z-index:1000}
+.navbar-container,.nav-container{width:100%;display:flex;align-items:center;justify-content:space-between;gap:30px}
+.logo{font-size:21px;font-weight:900;letter-spacing:2px;color:var(--white);transition:.2s ease}
+.logo:hover{text-shadow:0 0 10px var(--blue-glow)}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none}
+.nav-links a{position:relative;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--gray);transition:color .2s ease,text-shadow .2s ease}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:-7px;width:0;height:2px;background:var(--maroon-light);transition:width .2s ease}
+.nav-links a:hover{color:var(--white);text-shadow:0 0 8px rgba(141,43,58,.65)}
+.nav-links a:hover:after{width:100%;box-shadow:0 0 8px rgba(141,43,58,.7)}
 
-.brigade-hero::after {
-    content: "";
-    position: absolute;
-    right: -170px;
-    top: 50%;
-    width: 620px;
-    height: 620px;
-    transform: translateY(-50%);
-    border-radius: 50%;
-    border: 1px solid rgba(44,95,141,.09);
-    box-shadow: 0 0 0 100px rgba(44,95,141,.015),0 0 0 200px rgba(44,95,141,.01);
-}
+/* HERO */
+.hero{min-height:86vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:100px 4%;background:linear-gradient(110deg,#080b10 0%,#0b1119 55%,#0a0c11 100%)}
+.hero:before{content:"";position:absolute;left:0;top:0;width:5px;height:100%;background:var(--maroon);box-shadow:0 0 12px rgba(141,43,58,.2)}
+.hero:after{content:"";position:absolute;right:-150px;top:50%;width:600px;height:600px;transform:translateY(-50%);border-radius:50%;border:1px solid rgba(44,95,141,.08)}
+.hero-content{position:relative;z-index:2;width:100%}
+.hero-eyebrow,.hero .section-label{margin-bottom:13px}
+.hero h1{max-width:1100px;font-size:clamp(48px,7vw,105px);line-height:.95;font-weight:1000;letter-spacing:-3px;color:var(--white)}
+.hero h1 span{display:block;color:var(--gray-light)}
+.hero h2{margin-top:25px;font-size:clamp(19px,3vw,34px);color:var(--gray-light);letter-spacing:4px;font-weight:800}
+.hero p{max-width:780px;margin-top:28px;color:var(--gray);font-size:17px}
+.hero-number{position:absolute;right:3%;bottom:-70px;font-size:min(35vw,500px);line-height:1;font-weight:1000;color:rgba(255,255,255,.025);pointer-events:none;user-select:none}
 
-.brigade-hero-content {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-}
+/* BUTTONS */
+.hero-buttons{display:flex;gap:14px;margin-top:38px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 25px;border:1px solid var(--border-light);background:var(--navy-dark);color:var(--white);font-size:12px;font-weight:900;letter-spacing:1px;transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+.btn:hover{background:var(--navy);border-color:var(--navy-light);box-shadow:0 0 12px var(--blue-glow);transform:translateY(-2px)}
+.btn-red{background:var(--maroon-dark);border-color:var(--maroon)}
+.btn-red:hover{background:var(--maroon);border-color:var(--maroon-light);box-shadow:0 0 12px var(--red-glow)}
 
-.brigade-eyebrow {
-    margin-bottom: 16px;
-    color: var(--maroon-light);
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 3px;
-}
+/* SECTIONS */
+.section{width:96%;max-width:1750px;margin:0 auto;padding:125px 0;position:relative}
+.section-dark{background:var(--black-light)}
+.section:after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--border)}
+.section-header{margin-bottom:55px}
+.section-label{margin-bottom:13px;color:var(--maroon-light);font-size:11px;font-weight:900;letter-spacing:3px;text-transform:uppercase}
+.section-title,.section-header h2{font-size:clamp(38px,5vw,68px);line-height:1;font-weight:1000;letter-spacing:-2px}
+.section-description,.section-header p{max-width:850px;margin-top:22px;color:var(--gray);font-size:16px}
 
-.brigade-hero h1 {
-    max-width: 1100px;
-    font-size: clamp(48px,7vw,105px);
-    line-height: .95;
-    font-weight: 1000;
-    letter-spacing: -3px;
-    color: var(--white);
-}
+/* STATS */
+.stats,.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:55px}
+.stat{padding:30px;background:var(--black-lighter);border:1px solid var(--border);border-left:3px solid var(--navy);transition:.2s}
+.stat:hover{background:#171e27;border-color:var(--border-light);box-shadow:0 0 18px rgba(44,95,141,.12);transform:translateY(-3px)}
+.stat-number{font-size:40px;font-weight:1000;color:var(--white)}
+.stat-label{margin-top:6px;color:var(--gray);font-size:11px;font-weight:800;letter-spacing:1.5px}
 
-.brigade-hero p {
-    max-width: 780px;
-    margin-top: 28px;
-    color: var(--gray);
-    font-size: 17px;
-}
+/* BRIGADE CARDS */
+.brigades-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:25px}
+.brigade-card{position:relative;min-height:340px;padding:40px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:linear-gradient(145deg,#111a25,#0b0f15);border:1px solid var(--border);transition:.25s}
+.brigade-card:before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--navy);transition:.25s}
+.brigade-card:hover{transform:translateY(-5px);border-color:rgba(44,95,141,.7);background:linear-gradient(145deg,#151f2b,#0c1118);box-shadow:0 0 22px rgba(44,95,141,.18)}
+.brigade-card:hover:before{background:var(--navy-light);box-shadow:0 0 12px rgba(44,95,141,.65)}
+.brigade-number{position:absolute;top:20px;right:30px;font-size:80px;font-weight:1000;color:rgba(255,255,255,.035)}
+.brigade-card h3{margin-bottom:9px;font-size:33px;font-weight:1000}
+.brigade-card p{color:var(--gray);font-size:14px}
 
-.brigade-main {
-    width: 96%;
-    max-width: 1750px;
-    margin: 0 auto;
-}
+/* LEADERSHIP */
+.leadership-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.leader-card{min-height:540px;overflow:hidden;background:#0d1218;border:1px solid var(--border);transition:.25s}
+.leader-card:hover{transform:translateY(-5px);border-color:rgba(44,95,141,.65);box-shadow:0 0 20px rgba(44,95,141,.16)}
+.leader-image{height:300px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:linear-gradient(145deg,#142235,#0a0e13);border-bottom:1px solid var(--border);color:var(--gray-dark);font-size:12px;font-weight:900;letter-spacing:2px}
+.leader-image img{width:100%;height:100%;object-fit:contain;object-position:center bottom;transition:.3s}
+.leader-card:hover .leader-image img{transform:scale(1.04);filter:brightness(1.08)}
+.avatar-loading{color:var(--gray-dark);font-size:11px;font-weight:900;letter-spacing:2px}
+.leader-info{padding:28px}
+.leader-rank{color:var(--maroon-light);font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase}
+.leader-name{margin-top:7px;font-size:26px;font-weight:1000;color:var(--white)}
+.leader-description{margin-top:11px;color:var(--gray);font-size:13px}
 
-.brigade-section {
-    padding: 105px 0;
-    position: relative;
-}
+/* COMPANY SECTIONS */
+.company-section{width:100%}
+.company-title{margin-bottom:24px;font-size:27px;font-weight:1000;letter-spacing:1px;color:var(--white)}
+.company-title:before{content:"";display:inline-block;width:5px;height:25px;margin-right:11px;vertical-align:middle;background:var(--maroon);transition:.2s}
+.company-section:hover .company-title:before{background:var(--maroon-light);box-shadow:0 0 10px var(--red-glow)}
+.companies-container{display:flex;gap:60px;width:100%;align-items:flex-start}
+.companies-container .company-section{flex:1;min-width:0}
+.companies-container .leadership-grid{grid-template-columns:repeat(3,1fr);gap:22px}
+.companies-container .leader-card{min-height:540px}
+.companies-container .leader-image{height:350px}
 
-.brigade-section + .brigade-section {
-    border-top: 1px solid var(--border);
-}
+/* NEWS / RECRUITMENT / GALLERY */
+.news-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.news-card{padding:32px;background:#0d1218;border:1px solid var(--border);border-left:3px solid var(--maroon)}
+.news-date{color:var(--maroon-light);font-size:11px;font-weight:900;letter-spacing:2px}
+.news-card h3{margin-top:11px;font-size:24px;font-weight:1000}.news-card p{margin-top:10px;color:var(--gray);font-size:14px}
+.recruitment{position:relative;padding:75px 50px;overflow:hidden;background:linear-gradient(110deg,#101a26,#0c1117);border:1px solid var(--border)}
+.recruitment h2{font-size:clamp(40px,6vw,80px);font-weight:1000}.recruitment p{max-width:750px;margin-top:20px;color:var(--gray);font-size:17px}.recruitment .btn{margin-top:30px}
+.gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}.gallery-item{min-height:330px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#142235,#090d12);border:1px solid var(--border);color:var(--gray);font-size:12px;font-weight:900;letter-spacing:2px}
+footer{padding:60px 4%;border-top:1px solid var(--border);background:#030509}.footer-container{width:100%;display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap}.footer-logo{font-size:25px;font-weight:1000;letter-spacing:2px}.footer-text{color:var(--gray);font-size:13px}
 
-.brigade-section-header {
-    margin-bottom: 48px;
-}
-
-.brigade-section-number {
-    margin-bottom: 12px;
-    color: var(--maroon-light);
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 3px;
-}
-
-.brigade-section-header h2 {
-    font-size: clamp(38px,5vw,68px);
-    line-height: 1;
-    font-weight: 1000;
-    letter-spacing: -2px;
-}
-
-.brigade-section-header p {
-    max-width: 850px;
-    margin-top: 20px;
-    color: var(--gray);
-    font-size: 16px;
-}
-
-.brigade-command-grid {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 22px;
-}
-
-.brigade-command-card {
-    min-height: 245px;
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(145deg,#111a25,#0b0f15);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--navy);
-    transition: border-color .25s ease,transform .25s ease,box-shadow .25s ease;
-}
-
-.brigade-command-card::after {
-    content: "";
-    position: absolute;
-    right: -45px;
-    bottom: -80px;
-    width: 170px;
-    height: 170px;
-    border-radius: 50%;
-    border: 1px solid rgba(44,95,141,.08);
-}
-
-.brigade-command-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(44,95,141,.7);
-    box-shadow: 0 0 22px rgba(44,95,141,.18);
-}
-
-.brigade-command-role {
-    color: var(--maroon-light);
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 2px;
-}
-
-.brigade-command-name {
-    margin-top: 12px;
-    font-size: 28px;
-    font-weight: 1000;
-}
-
-.brigade-command-id {
-    margin-top: 7px;
-    color: var(--gray);
-    font-size: 12px;
-}
-
-.brigade-company-grid {
-    display: grid;
-    grid-template-columns: repeat(2,1fr);
-    gap: 25px;
-}
-
-.brigade-company-card {
-    padding: 38px;
-    background: #0d1218;
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--maroon);
-    transition: border-color .25s ease,transform .25s ease,box-shadow .25s ease;
-}
-
-.brigade-company-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(141,43,58,.65);
-    box-shadow: 0 0 20px rgba(141,43,58,.15);
-}
-
-.brigade-company-card h3 {
-    margin-bottom: 22px;
-    font-size: 29px;
-    font-weight: 1000;
-}
-
-.brigade-company-card p {
-    margin-top: 10px;
-    color: var(--gray);
-    font-size: 14px;
-}
-
-.brigade-company-card strong {
-    color: var(--gray-light);
-}
-
-.brigade-specialties {
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    gap: 18px;
-}
-
-.brigade-specialty {
-    min-height: 190px;
-    padding: 28px;
-    background: #0d1218;
-    border: 1px solid var(--border);
-    transition: border-color .25s ease,transform .25s ease,box-shadow .25s ease;
-}
-
-.brigade-specialty:hover {
-    transform: translateY(-4px);
-    border-color: rgba(44,95,141,.65);
-    box-shadow: 0 0 20px rgba(44,95,141,.15);
-}
-
-.brigade-specialty-number {
-    color: var(--maroon-light);
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 2px;
-}
-
-.brigade-specialty h3 {
-    margin-top: 28px;
-    font-size: 20px;
-    font-weight: 1000;
-}
-
-.brigade-specialty p {
-    margin-top: 8px;
-    color: var(--gray);
-    font-size: 13px;
-}
-
-.brigade-mission {
-    display: grid;
-    grid-template-columns: 1.5fr .5fr;
-    gap: 22px;
-}
-
-.brigade-mission-copy,
-.brigade-status {
-    padding: 35px;
-    background: #0d1218;
-    border: 1px solid var(--border);
-}
-
-.brigade-mission-copy p {
-    color: var(--gray);
-    font-size: 16px;
-}
-
-.brigade-status {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.brigade-status span {
-    color: var(--maroon-light);
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 2px;
-}
-
-.brigade-status strong {
-    margin-top: 7px;
-    font-size: 24px;
-    font-weight: 1000;
-}
-
-.brigade-placeholder {
-    padding: 35px;
-    background: #0d1218;
-    border: 1px solid var(--border);
-    color: var(--gray);
-}
-
-@media (max-width: 1000px) {
-    .brigade-command-grid { grid-template-columns: 1fr; }
-    .brigade-specialties { grid-template-columns: repeat(2,1fr); }
-    .brigade-mission { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 700px) {
-    .brigade-hero { min-height: 70vh; padding: 80px 5%; }
-    .brigade-hero h1 { font-size: 50px; }
-    .brigade-main { width: 90%; }
-    .brigade-section { padding: 85px 0; }
-    .brigade-company-grid,
-    .brigade-specialties { grid-template-columns: 1fr; }
-    .brigade-command-card { min-height: 210px; }
-}
+/* RESPONSIVE */
+@media(max-width:1100px){.companies-container{flex-direction:column}.companies-container .company-section{width:100%}.companies-container .leadership-grid{grid-template-columns:repeat(3,1fr)}.leadership-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.nav-links{gap:15px}.nav-links a{font-size:11px}.stats,.stats-grid{grid-template-columns:1fr}.brigades-grid,.news-grid,.gallery-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.leadership-grid,.companies-container .leadership-grid{grid-template-columns:1fr}.companies-container .leader-card{min-height:500px}.companies-container .leader-image{height:320px}}
+@media(max-width:600px){.navbar{padding:15px 5%}.navbar-container,.nav-container{flex-direction:column;align-items:flex-start;gap:15px}.nav-links{width:100%;display:flex;flex-wrap:wrap;gap:12px}.nav-links a{font-size:10px}.hero{min-height:80vh;padding:80px 5%}.hero h1{font-size:50px}.hero h2{font-size:20px;letter-spacing:2px}.hero p{font-size:15px}.section{width:90%;padding:90px 0}.brigade-card{min-height:280px;padding:30px}.leader-image{height:260px}.leader-card{min-height:470px}.recruitment{padding:60px 30px}.footer-container{flex-direction:column;align-items:flex-start}}
