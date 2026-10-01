@@ -8,5 +8,5 @@
 .join p{max-width:620px;margin-left:auto;margin-right:auto}
 .b-card{text-align:center}
 .metrics article{text-align:center}
-.command-grid .leader-info{text-align:center;width:100%}
+.command-grid .leader-info{text-align:left;width:auto}
 .propaganda .archive-note{text-align:center}
