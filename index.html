@@ -118,7 +118,7 @@ async function loadReviews(){
       const safeName = String(r.roblox_username).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
       const safeText = String(r.review_text).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
       const userId = encodeURIComponent(String(r.roblox_user_id || ''));
-      const avatar = userId ? 'https://www.roblox.com/headshot-thumbnail/image?userId='+userId+'&width=150&height=150&format=png' : '';
+      const avatar = userId ? REVIEW_FUNCTION_URL+'?userId='+userId : '';
       const avatarMarkup = avatar ? '<img class="review-avatar" src="'+avatar+'" alt="'+safeName+' Roblox avatar" loading="lazy" onerror="this.style.display=\'none\'">' : '';
       return '<article class="review-card"><div class="review-card-main"><div class="review-copy"><div><span class="review-user">@'+safeName+'</span><span class="review-stars">'+stars+'</span></div><p>'+safeText+'</p></div>'+avatarMarkup+'</div></article>';
     }).join('');
