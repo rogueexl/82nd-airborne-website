@@ -8,7 +8,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body><div class="creator-modal" id="creator-modal" aria-hidden="true">
+  <div class="creator-modal-backdrop"></div>
+  <div class="creator-modal-box" role="dialog" aria-modal="true" aria-labelledby="creator-modal-title">
+    <button class="creator-modal-close" id="creator-modal-close" type="button" aria-label="Close">×</button>
+    <span class="creator-modal-index">00 / SITE NOTICE</span>
+    <div class="creator-modal-mark">82</div>
+    <div class="creator-modal-content">
+      <span class="creator-modal-kicker">WEBSITE ARCHITECT // rogueexl</span>
+      <h2 id="creator-modal-title">HELP BUILD<br><em>WHAT COMES NEXT.</em></h2>
+      <p>This website was designed and built by <strong>rogueexl</strong>. If you spot something that could be improved, or have an idea for something you'd like to see added, send your feedback and suggestions.</p>
+      <div class="creator-modal-actions">
+        <button class="btn red" id="creator-modal-dismiss" type="button">ENTER SITE <b>↗</b></button>
+        <span>FEEDBACK // SUGGESTIONS // IDEAS</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="noise"></div><header class="top">
 <a class="logo" href="index.html"><span>82</span> AIRBORNE</a>
 <nav><a href="#division">DIVISION</a><a href="#brigades">BRIGADES</a><a href="#command">COMMAND</a><a href="#propaganda">PROPAGANDA</a><a href="#recruit">JOIN</a><a href="#reviews">REVIEWS</a></nav>
@@ -166,5 +183,27 @@ reviewButton.addEventListener('click', async ()=>{
 });
 
 loadReviews();
+</script>
+<script>
+(() => {
+  const modal = document.getElementById('creator-modal');
+  const close = () => {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden','true');
+    document.body.classList.remove('modal-open');
+    sessionStorage.setItem('creatorNoticeSeen','1');
+  };
+  if(!sessionStorage.getItem('creatorNoticeSeen')){
+    requestAnimationFrame(() => {
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden','false');
+      document.body.classList.add('modal-open');
+    });
+  }
+  document.getElementById('creator-modal-close').addEventListener('click',close);
+  document.getElementById('creator-modal-dismiss').addEventListener('click',close);
+  modal.querySelector('.creator-modal-backdrop').addEventListener('click',close);
+  document.addEventListener('keydown',e => { if(e.key === 'Escape' && modal.classList.contains('is-open')) close(); });
+})();
 </script>
 </body></html>
