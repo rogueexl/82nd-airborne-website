@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
   // Proxy Roblox avatar thumbnails so review cards can load them reliably.
   if (req.method === "GET") {
     const userId = new URL(req.url).searchParams.get("userId");
-    if (!userId || !/^\\d+$/.test(userId)) {
+    if (!userId || !/^\d+$/.test(userId)) {
       return response({ error: "Invalid Roblox user ID." }, 400);
     }
 
