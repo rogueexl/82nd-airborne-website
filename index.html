@@ -113,32 +113,14 @@ async function loadReviews(){
     const reviews = await res.json();
     if(!reviews.length) return;
 
-    const ids = reviews.map(r => r.roblox_user_id).filter(Boolean).join(',');
-    let avatars = {};
-    if(ids){
-      try{
-        const avatarRes = await fetch('https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds='+encodeURIComponent(ids)+'&size=150x150&format=Png&isCircular=false');
-        if(avatarRes.ok){
-          const avatarData = await avatarRes.json();
-          (avatarData.data || []).forEach(a => {
-            if(a.targetId && a.imageUrl) avatars[String(a.targetId)] = a.imageUrl;
-          });
-        }
-      }catch(e){}
-    }
-
     reviewList.innerHTML = reviews.map(r => {
       const stars = '★'.repeat(Number(r.rating))+'☆'.repeat(5-Number(r.rating));
       const safeName = String(r.roblox_username).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
       const safeText = String(r.review_text).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-      const avatar = avatars[String(r.roblox_user_id)] || '';
-      const avatarMarkup = avatar ? '<img class="review-avatar" src="'+avatar+'" alt="" loading="lazy">' : '<div class="review-avatar review-avatar-empty"></div>';
-      return '<article class="review-card">'+
-        '<div class="review-card-main">'+
-          '<div class="review-copy"><div><span class="review-user">@'+safeName+'</span><span class="review-stars">'+stars+'</span></div><p>'+safeText+'</p></div>'+
-          avatarMarkup+
-        '</div>'+
-      '</article>';
+      const userId = encodeURIComponent(String(r.roblox_user_id || ''));
+      const avatar = userId ? 'https://www.roblox.com/headshot-thumbnail/image?userId='+userId+'&width=150&height=150&format=png' : '';
+      const avatarMarkup = avatar ? '<img class="review-avatar" src="'+avatar+'" alt="'+safeName+' Roblox avatar" loading="lazy" onerror="this.style.display=\'none\'">' : '';
+      return '<article class="review-card"><div class="review-card-main"><div class="review-copy"><div><span class="review-user">@'+safeName+'</span><span class="review-stars">'+stars+'</span></div><p>'+safeText+'</p></div>'+avatarMarkup+'</div></article>';
     }).join('');
   }catch(e){}
 }
