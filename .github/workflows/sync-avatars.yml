@@ -15,27 +15,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download Roblox avatars
+      - name: Resolve and download Roblox avatars
         shell: bash
         run: |
           set -e
           mkdir -p images/avatars
-          ids="499090031,497963338,1782363768,1722244139,1555400491,5312628624,3142673263,1765287417,948870469,3957797498"
-          curl -fsSL "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=$ids&size=420x420&format=Png&isCircular=false" -o /tmp/avatars.json
-          jq -r '.data[] | [.targetId, .imageUrl] | @tsv' /tmp/avatars.json | while IFS=$'\t' read -r id url; do
-            case "$id" in
-              499090031) name="evnxl";;
-              497963338) name="Dannyxl05";;
-              1782363768) name="DushiNL0";;
-              1722244139) name="Chocooza";;
-              1555400491) name="XxrealAntCrewXx";;
-              5312628624) name="smith0dev";;
-              3142673263) name="rogueexl";;
-              1765287417) name="dabbbbaa22";;
-              948870469) name="EnjoyCash";;
-              3957797498) name="Evader19237iwiw";;
-            esac
-            curl -fsSL "$url" -o "images/avatars/$name.png"
+
+          usernames="evnxl Dannyxl05 DushiNL0 Chocooza XxrealAntCrewXx smith0dev rogueexl dabbbbaa22 EnjoyCash Evader19237iwiw resonancescream jjgogmn234 ghosttttxl thebiggiant1122 SwimiumSon scrxptz_ll ocpstandard"
+
+          for name in $usernames; do
+            payload=$(jq -nc --arg username "$name" '{usernames:[$username],excludeBannedUsers:false}')
+            response=$(curl -fsSL -X POST -H "Content-Type: application/json" -d "$payload" "https://users.roblox.com/v1/usernames/users")
+            id=$(echo "$response" | jq -r '.data[0].id // empty')
+
+            if [ -z "$id" ]; then
+              echo "Could not resolve Roblox username: $name"
+              continue
+            fi
+
+            image_url=$(curl -fsSL "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=$id&size=420x420&format=Png&isCircular=false" | jq -r '.data[0].imageUrl // empty')
+
+            if [ -n "$image_url" ]; then
+              curl -fsSL "$image_url" -o "images/avatars/$name.png"
+              echo "Synced $name ($id)"
+            else
+              echo "No avatar returned for $name ($id)"
+            fi
           done
 
       - name: Commit updated avatars
