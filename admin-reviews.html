@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="https://commons.wikimedia.org/wiki/Special:Redirect/file/82_ABD_SSI.svg">
+<title>82nd Airborne // Review Administration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.admin{max-width:1180px;margin:0 auto;padding:130px 28px 80px}.admin-head{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:28px}.admin-head .index{color:#b52b3f;font-size:9px;letter-spacing:2px}.admin-head h1{font:900 clamp(55px,8vw,100px)/.8 'Barlow Condensed';margin:18px 0}.admin-head h1 em{color:#b52b3f;font-style:normal}.admin-head p{color:#7f8b98;max-width:650px;line-height:1.7}.panel{border:1px solid var(--line);background:#080c11}.panel-head{padding:24px 28px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:20px}.panel-head h2{font:800 30px 'Barlow Condensed';margin:0}.status{font-size:9px;letter-spacing:1.5px;color:#7f8b98}.form{padding:28px;display:grid;gap:14px}.form label{display:grid;gap:8px}.form span{font-size:8px;letter-spacing:2px;color:#74818e}.form input{background:#05070a;border:1px solid var(--line);color:#fff;padding:14px;font:600 13px Inter}.form button,.review-actions button{border:0}.message{font-size:9px;letter-spacing:1px;color:#b52b3f;min-height:14px}.message.good{color:#50df88}.review-admin{padding:26px 28px;border-bottom:1px solid var(--line)}.review-admin:last-child{border-bottom:0}.review-meta{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}.review-admin h3{font:800 25px 'Barlow Condensed';margin:0}.review-admin .stars{color:#d7a73e;letter-spacing:2px}.review-admin small{display:block;color:#74818e;font-size:8px;letter-spacing:1.5px;margin-top:5px}.review-admin p{color:#b0bac4;line-height:1.7;max-width:850px}.review-buttons{display:flex;gap:10px}.admin-btn{padding:11px 15px;background:#10161d;color:#fff;border:1px solid var(--line);font:800 10px Inter;letter-spacing:1px;cursor:pointer}.admin-btn.approve{border-color:#286b46;color:#50df88}.admin-btn.reject{border-color:#7b2635;color:#ff7385}.admin-btn:disabled{opacity:.5;cursor:wait}.empty{padding:55px 28px;text-align:center;color:#74818e;font-size:10px;letter-spacing:2px}@media(max-width:650px){.admin{padding:105px 18px 50px}.panel-head,.review-meta{display:block}.review-buttons{margin-top:18px}.review-buttons button{width:100%}.review-admin{padding:22px}.panel-head{padding:22px}.form{padding:22px}}
+</style>
+</head>
+<body>
+<header class="top">
+<a class="logo" href="index.html"><span>82</span> AIRBORNE</a>
+<nav><a href="index.html#division">DIVISION</a><a href="index.html#brigades">BRIGADES</a><a href="index.html#command">COMMAND</a><a href="index.html#reviews">REVIEWS</a></nav>
+<div class="top-right"><i></i> ADMIN</div>
+</header>
+<main class="admin">
+<section class="admin-head">
+<span class="index">ADMINISTRATION // REVIEW MODERATION</span>
+<h1>REVIEW<br><em>CONTROL.</em></h1>
+<p>Private moderation console for approving or rejecting division reviews. Access is protected by Supabase authentication and an administrator allowlist.</p>
+</section>
+
+<section class="panel" id="login-panel">
+<div class="panel-head"><h2>ADMIN SIGN IN</h2><span class="status">SECURE AUTHENTICATION</span></div>
+<form class="form" id="login-form">
+<label><span>EMAIL</span><input id="email" type="email" autocomplete="username" required></label>
+<label><span>PASSWORD</span><input id="password" type="password" autocomplete="current-password" required></label>
+<button class="btn red" type="submit">SIGN IN <b>↗</b></button>
+<div class="message" id="login-message"></div>
+</form>
+</section>
+
+<section class="panel" id="reviews-panel" style="display:none">
+<div class="panel-head"><h2>PENDING REVIEWS</h2><div><span class="status" id="count"></span> <button class="admin-btn" id="signout">SIGN OUT</button></div></div>
+<div id="pending-list"><div class="empty">LOADING PENDING REVIEWS...</div></div>
+</section>
+</main>
+<script>
+const SUPABASE_URL='https://ypmflmivzjptkitqdowj.supabase.co';
+const SUPABASE_KEY='sb_publishable_7u7ow0A7-YbvgLOc_r8StQ_MENpi4uj';
+let accessToken=null;
+
+const loginPanel=document.getElementById('login-panel');
+const reviewsPanel=document.getElementById('reviews-panel');
+const loginMessage=document.getElementById('login-message');
+const list=document.getElementById('pending-list');
+
+function msg(el,text,good=false){el.textContent=text;el.className='message'+(good?' good':'');}
+function headers(){return {apikey:SUPABASE_KEY,Authorization:'Bearer '+accessToken,'Content-Type':'application/json'};}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+async function auth(email,password){
+ const res=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+ const data=await res.json().catch(()=>({}));
+ if(!res.ok) throw new Error(data.error_description||data.msg||'Sign-in failed.');
+ return data;
+}
+async function checkAdmin(userId){
+ const res=await fetch(SUPABASE_URL+'/rest/v1/admin_users?select=user_id&user_id=eq.'+encodeURIComponent(userId),{headers:headers()});
+ if(!res.ok) throw new Error('Could not verify administrator access.');
+ const rows=await res.json();
+ return rows.length>0;
+}
+async function loadPending(){
+ list.innerHTML='<div class="empty">LOADING PENDING REVIEWS...</div>';
+ const res=await fetch(SUPABASE_URL+'/rest/v1/reviews?select=id,roblox_username,roblox_user_id,rating,review_text,created_at&status=eq.pending&order=created_at.asc',{headers:headers()});
+ if(!res.ok){list.innerHTML='<div class="empty">COULD NOT LOAD REVIEWS.</div>';return;}
+ const rows=await res.json();
+ document.getElementById('count').textContent=rows.length+' PENDING';
+ if(!rows.length){list.innerHTML='<div class="empty">NO PENDING REVIEWS.</div>';return;}
+ list.innerHTML=rows.map(r=>'<article class="review-admin"><div class="review-meta"><div><h3>@'+esc(r.roblox_username)+'</h3><small>ROBLOX ID // '+esc(r.roblox_user_id)+' · '+new Date(r.created_at).toLocaleString()+'</small><div class="stars">'+'★'.repeat(Number(r.rating))+'☆'.repeat(5-Number(r.rating))+'</div></div><div class="review-buttons"><button class="admin-btn approve" data-id="'+esc(r.id)+'" data-status="approved">APPROVE</button><button class="admin-btn reject" data-id="'+esc(r.id)+'" data-status="rejected">REJECT</button></div></div><p>'+esc(r.review_text)+'</p></article>').join('');
+ list.querySelectorAll('.admin-btn[data-id]').forEach(btn=>btn.addEventListener('click',()=>moderate(btn)));
+}
+async function moderate(btn){
+ btn.disabled=true;
+ const id=btn.dataset.id,status=btn.dataset.status;
+ const res=await fetch(SUPABASE_URL+'/rest/v1/reviews?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{...headers(),Prefer:'return=minimal'},body:JSON.stringify({status,updated_at:new Date().toISOString()})});
+ if(!res.ok){btn.disabled=false;alert('Could not update this review.');return;}
+ await loadPending();
+}
+document.getElementById('login-form').addEventListener('submit',async e=>{
+ e.preventDefault();msg(loginMessage,'SIGNING IN...');
+ try{
+  const data=await auth(document.getElementById('email').value.trim(),document.getElementById('password').value);
+  const allowed=await checkAdmin(data.user.id);
+  if(!allowed) throw new Error('This account is not an approved administrator.');
+  accessToken=data.access_token;
+  loginPanel.style.display='none';reviewsPanel.style.display='block';
+  await loadPending();
+ }catch(err){msg(loginMessage,err.message||'Sign-in failed.');}
+});
+document.getElementById('signout').addEventListener('click',()=>{accessToken=null;reviewsPanel.style.display='none';loginPanel.style.display='block';document.getElementById('password').value='';});
+</script>
+</body>
+</html>
