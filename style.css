@@ -10,3 +10,19 @@
 .metrics article{text-align:center}
 .command-grid .leader-info{text-align:left;width:auto}
 .propaganda .archive-note{text-align:center}
+
+.reviews{padding:120px max(7vw,calc((100vw - 1500px)/2));border-bottom:1px solid var(--line);background:#06090d}
+.reviews-panel{border:1px solid var(--line);background:#090d12;overflow:hidden}
+.reviews-top{display:flex;align-items:center;justify-content:space-between;gap:30px;padding:32px 36px;border-bottom:1px solid var(--line)}
+.review-kicker{font-size:8px;letter-spacing:2.5px;color:#7d8a97}
+.reviews-top h3{font:900 42px/.9 'Barlow Condensed';margin:10px 0 0}
+.review-login{cursor:pointer}
+.review-notice{display:flex;gap:18px;align-items:flex-start;padding:28px 36px;background:linear-gradient(90deg,rgba(181,43,63,.08),transparent);border-bottom:1px solid var(--line)}
+.review-mark{width:28px;height:28px;display:grid;place-items:center;border:1px solid rgba(181,43,63,.5);color:#b52b3f;font-weight:900}
+.review-notice strong{font-size:9px;letter-spacing:2px}
+.review-notice p{color:#7f8b98;line-height:1.7;margin:8px 0 0;max-width:760px;font-size:13px}
+.review-list{padding:36px}
+.review-empty{min-height:180px;border:1px dashed rgba(255,255,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px}
+.review-empty span{font-size:8px;letter-spacing:2px;color:#b52b3f}
+.review-empty strong{font:900 30px 'Barlow Condensed';color:#8c98a5}
+@media(max-width:650px){.reviews{padding:85px 20px}.reviews-top{display:block;padding:25px}.reviews-top h3{font-size:36px}.review-login{margin-top:22px}.review-notice{padding:25px}.review-list{padding:20px}.review-empty{padding:30px 20px}.review-empty strong{font-size:25px}}
