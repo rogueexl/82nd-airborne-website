@@ -27,6 +27,33 @@ Deno.serve(async (req) => {
     return new Response("ok", { status: 200, headers: corsHeaders });
   }
 
+  // Proxy Roblox avatar thumbnails so review cards can load them reliably.
+  if (req.method === "GET") {
+    const userId = new URL(req.url).searchParams.get("userId");
+    if (!userId || !/^\\d+$/.test(userId)) {
+      return response({ error: "Invalid Roblox user ID." }, 400);
+    }
+
+    const thumb = await fetch(
+      "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" +
+      encodeURIComponent(userId) +
+      "&size=150x150&format=Png&isCircular=false"
+    );
+
+    if (!thumb.ok) {
+      return response({ error: "Avatar lookup failed." }, 502);
+    }
+
+    const thumbData = await thumb.json();
+    const imageUrl = thumbData?.data?.[0]?.imageUrl;
+
+    if (!imageUrl) {
+      return response({ error: "Avatar not available." }, 404);
+    }
+
+    return Response.redirect(imageUrl, 302);
+  }
+
   if (req.method !== "POST") {
     return response({ error: "Method not allowed." }, 405);
   }
