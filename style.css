@@ -69,3 +69,26 @@
 .b-card.panther:hover{box-shadow:inset 0 0 80px rgba(240,106,154,.14),0 25px 60px rgba(0,0,0,.4)}
 .b-card.blackhats:hover{box-shadow:inset 0 0 80px rgba(61,140,255,.15),0 25px 60px rgba(0,0,0,.4)}
 .b-card.pegasus:hover{box-shadow:inset 0 0 80px rgba(207,212,218,.11),0 25px 60px rgba(0,0,0,.4)}
+
+/* Global brightness pass */
+body{background:#070a0f}
+.top{background:rgba(8,12,18,.78)}
+.hero{background:radial-gradient(circle at 75% 45%,rgba(61,140,255,.25),transparent 28%),radial-gradient(circle at 80% 90%,rgba(181,43,63,.16),transparent 28%)}
+.hero:before{background-size:100% 100%,70px 70px,70px 70px}
+.eyebrow,.index{color:#91a8bc}
+.hero p,.section-head>p,.archive-head>p{color:#a3b0bc}
+.division,.command{background:#0a0f16}
+.brigades,.join,.reviews{background:#070b11}
+.drop-card,.alt-card{background:rgba(10,16,24,.88)}
+.b-card{background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.008))}
+.b-card small{color:#a0adba}
+.b-card span{color:#a0acb8}
+.leader{background:#0c121a}
+.leader-info small{color:#8797a7}
+.leader-info span{color:#82909e}
+.join p,.propaganda .archive-note{color:#a0adb9}
+.reviews-panel{background:#0a0f16}
+.review-form{background:#0b1119}
+.review-form input,.review-form select,.review-form textarea{background:#070b10}
+.review-card p{color:#a8b3bd}
+footer{background:#070b10}
