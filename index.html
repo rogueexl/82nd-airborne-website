@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="page-noise"></div><div class="cursor-glow"></div><div class="scroll-progress"></div>
+<div class="page-noise"></div><div class="cursor-glow"></div><div class="scroll-progress"></div><div class="parachute-cursor" aria-hidden="true"><div class="pc-canopy"></div><div class="pc-lines"></div><div class="pc-person"></div></div>
 <header class="navbar">
   <div class="navbar-container">
     <a class="brand" href="#top"><span>82</span> AIRBORNE</a>
@@ -77,17 +77,17 @@
 <script>
 const modalData={
 falcon:{label:"01 / FALCON BRIGADE",title:"FALCON",copy:"The division's primary MILSIM brigade, focused on tactical operations, structured training, and field readiness.",points:["MILSIM OPERATIONS","STRUCTURED TRAINING","FIELD READINESS"],link:"brigades/falcon.html"},
-panther:{label:"02 / PANTHER BRIGADE",title:"PANTHER",copy:"A versatile brigade combining MILSIM operations with driving, combat medic, and search & rescue capabilities.",points:["MILSIM","DRIVING","COMBAT MEDIC","SEARCH & RESCUE"],link:"brigades/panther.html"},
-blackhats:{label:"03 / BLACK HATS BRIGADE",title:"BLACK HATS",copy:"The division's primary instructional brigade, responsible for preparing and developing future personnel.",points:["STANDARDS","TRAINING","DEVELOPMENT","READINESS"],link:"brigades/black-hats.html"},
-pegasus:{label:"04 / PEGASUS BRIGADE",title:"PEGASUS",copy:"An elite competitive brigade dedicated entirely to scrims, TPS, and organized wargames.",points:["SCRIMS","TPS","WARGAMES","TEAMWORK"],link:"brigades/pegasus.html"}
+panther:{label:"02 / PANTHER BRIGADE",title:"PANTHER",copy:"A versatile brigade combining MILSIM operations with driving, combat medic, and search & rescue capabilities.",points:["MILSIM","DRIVING","COMBAT MEDIC","SEARCH & RESCUE","ANGEL COMPANY","173RD MOUNTAINEERING COMPANY"],link:"brigades/panther.html"},
+blackhats:{label:"03 / BLACK HATS BRIGADE",title:"BLACK HATS",copy:"The division's primary instructional brigade, responsible for preparing and developing future personnel.",points:["STANDARDS","TRAINING","DEVELOPMENT","READINESS","ORPHEUS COMPANY","EURYDICE COMPANY"],link:"brigades/black-hats.html"},
+pegasus:{label:"04 / PEGASUS BRIGADE",title:"PEGASUS",copy:"An elite competitive brigade dedicated entirely to scrims, TPS, and organized wargames.",points:["SCRIMS","TPS","WARGAMES","TEAMWORK","VALKYRIE COMPANY"],link:"brigades/pegasus.html"}
 };
 const modal=document.getElementById("brigade-modal");
-document.querySelectorAll("[data-modal]").forEach(card=>card.addEventListener("click",()=>{const d=modalData[card.dataset.modal];document.getElementById("modal-label").textContent=d.label;document.getElementById("modal-title").textContent=d.title;document.getElementById("modal-copy").textContent=d.copy;document.getElementById("modal-points").innerHTML=d.points.map(x=>"<span>"+x+"</span>").join("");document.getElementById("modal-link").href=d.link;modal.classList.add("open");modal.setAttribute("aria-hidden","false")}));
+document.querySelectorAll("[data-modal]").forEach(card=>card.addEventListener("click",()=>{const d=modalData[card.dataset.modal];document.getElementById("modal-label").textContent=d.label;document.getElementById("modal-title").textContent=d.title;document.getElementById("modal-copy").textContent=d.copy;document.getElementById("modal-points").innerHTML=d.points.map(x=>"<span>"+x+"</span>").join("");document.getElementById("modal-link").href=d.link;modal.style.setProperty("--modal-accent",getComputedStyle(card).getPropertyValue("--accent"));modal.classList.add("open");modal.setAttribute("aria-hidden","false")}));
 function closeModal(){modal.classList.remove("open");modal.setAttribute("aria-hidden","true")}
 document.querySelector(".modal-close").onclick=closeModal;document.querySelector(".modal-backdrop").onclick=closeModal;document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
 const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible")}),{threshold:.12});document.querySelectorAll(".reveal").forEach(x=>io.observe(x));
 window.addEventListener("scroll",()=>{const h=document.documentElement.scrollHeight-innerHeight;document.querySelector(".scroll-progress").style.width=(scrollY/h*100)+"%";});
-window.addEventListener("pointermove",e=>{document.querySelector(".cursor-glow").style.transform="translate("+e.clientX+"px,"+e.clientY+"px)"});
+window.addEventListener("pointermove",e=>{document.querySelector(".cursor-glow").style.transform="translate("+e.clientX+"px,"+e.clientY+"px)";const p=document.querySelector(".parachute-cursor");p.style.transform="translate3d("+(e.clientX+10)+"px,"+(e.clientY+10)+"px,0)"});document.querySelectorAll("a,button").forEach(el=>{el.addEventListener("mouseenter",()=>document.querySelector(".parachute-cursor").classList.add("hover"));el.addEventListener("mouseleave",()=>document.querySelector(".parachute-cursor").classList.remove("hover"))});
 document.querySelectorAll(".leader-image img").forEach(image=>{const loading=image.parentElement.querySelector(".avatar-loading"),id=image.dataset.userId;const fallback="https://www.roblox.com/headshot-thumbnail/image?userId="+id+"&width=420&height=420&format=png";image.onload=()=>loading.style.display="none";image.onerror=()=>{if(image.src!==fallback)image.src=fallback};fetch("https://thumbnails.roblox.com/v1/users/avatar?userIds="+id+"&size=420x420&format=Png&isCircular=false").then(r=>r.json()).then(d=>image.src=d.data?.[0]?.imageUrl||fallback).catch(()=>image.src=fallback)});
 </script>
 </body>
