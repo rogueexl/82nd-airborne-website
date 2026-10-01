@@ -92,3 +92,12 @@ body{background:#070a0f}
 .review-form input,.review-form select,.review-form textarea{background:#070b10}
 .review-card p{color:#a8b3bd}
 footer{background:#070b10}
+
+/* Review card layout */
+.review-card-main{display:flex;align-items:flex-start;justify-content:flex-start;gap:14px}
+.review-avatar{width:58px;height:58px;object-fit:cover;border:1px solid rgba(61,140,255,.35);background:#10161d;flex:0 0 58px}
+.review-copy{flex:1;min-width:0}
+@media(max-width:650px){
+  .review-card-main{gap:11px}
+  .review-avatar{width:48px;height:48px;flex-basis:48px}
+}
