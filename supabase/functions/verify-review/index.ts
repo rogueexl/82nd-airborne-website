@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
       roblox_username: user.name,
       rating,
       review_text: reviewText,
-      status: "pending",
+      status: "approved",
     });
 
     if (insertError) {
@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
     return response({
       ok: true,
       username: user.name,
-      message: "Review submitted — pending moderation.",
+      message: "Review submitted — now published.",
     });
   } catch (error) {
     console.error(error);
