@@ -104,8 +104,8 @@ footer{background:#070b10}
 
 /* Creator Easter egg */
 footer{position:relative}
-.site-easter-egg{appearance:none;border:0;background:transparent;color:rgba(255,255,255,.16);font:700 10px 'Barlow Condensed';padding:2px 5px;margin-left:8px;cursor:pointer;transition:.25s}
+.site-easter-egg{appearance:none;border:0;background:transparent;color:rgba(255,255,255,.42);font:700 11px 'Barlow Condensed';padding:2px 5px;margin-left:8px;cursor:pointer;transition:.25s}
 .site-easter-egg:hover,.site-easter-egg:focus{color:var(--blue);text-shadow:0 0 12px rgba(61,140,255,.55)}
-.creator-easter-egg{position:absolute;right:0;bottom:-22px;font-size:7px;letter-spacing:2px;color:rgba(61,140,255,0);transform:translateY(-3px);transition:.35s;pointer-events:none}
-footer:hover .creator-easter-egg,footer:focus-within .creator-easter-egg{color:rgba(61,140,255,.72);transform:translateY(0)}
+.creator-easter-egg{position:absolute;right:0;bottom:-22px;font-size:7px;letter-spacing:2px;color:rgba(61,140,255,.68);transform:translateY(0);transition:.35s;pointer-events:none}
+footer:hover .creator-easter-egg,footer:focus-within .creator-easter-egg{color:#6ea8ff;transform:translateY(0);text-shadow:0 0 12px rgba(61,140,255,.22)}
 .creator-easter-egg b{color:#d7e2ee}
