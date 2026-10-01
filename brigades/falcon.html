@@ -11,5 +11,25 @@
 <section class="section section-dark" id="companies"><div class="section-header"><div class="section-label">SUBORDINATE UNITS</div><h2 class="section-title">COMPANY COMMAND</h2><p class="section-description">Leadership across Falcon Brigade's subordinate companies.</p></div><div class="companies-container">
 <div class="company-section"><h3 class="company-title">VULTURE COMPANY</h3><div class="leadership-grid"><div class="leader-card"><div class="leader-image"><span class="avatar-loading">LOADING AVATAR</span><img data-user-id="3142673263" alt="rogueexl Roblox Avatar"></div><div class="leader-info"><div class="leader-rank">CCO</div><div class="leader-name">rogueexl</div><div class="leader-description">Company Commanding Officer</div></div></div><div class="leader-card"><div class="leader-image"><span>POSITION VACANT</span></div><div class="leader-info"><div class="leader-rank">CXO</div><div class="leader-name">VACANT</div><div class="leader-description">Company Executive Officer</div></div></div><div class="leader-card"><div class="leader-image"><span>POSITION VACANT</span></div><div class="leader-info"><div class="leader-rank">CFS</div><div class="leader-name">VACANT</div><div class="leader-description">Company First Sergeant</div></div></div></div></div><div class="company-section"><h3 class="company-title">HAWK COMPANY</h3><div class="leadership-grid"><div class="leader-card"><div class="leader-image"><span class="avatar-loading">LOADING AVATAR</span><img data-user-id="1765287417" alt="dabbbbaa22 Roblox Avatar"></div><div class="leader-info"><div class="leader-rank">CCO</div><div class="leader-name">dabbbbaa22</div><div class="leader-description">Company Commanding Officer</div></div></div><div class="leader-card"><div class="leader-image"><span class="avatar-loading">LOADING AVATAR</span><img data-user-id="948870469" alt="EnjoyCash Roblox Avatar"></div><div class="leader-info"><div class="leader-rank">CXO</div><div class="leader-name">EnjoyCash</div><div class="leader-description">Company Executive Officer</div></div></div><div class="leader-card"><div class="leader-image"><span class="avatar-loading">LOADING AVATAR</span><img data-user-id="3957797498" alt="Evader19237iwiw Roblox Avatar"></div><div class="leader-info"><div class="leader-rank">CFS</div><div class="leader-name">Evader19237iwiw</div><div class="leader-description">Company First Sergeant</div></div></div></div></div></div></section>
 <footer><div class="footer-container"><div class="footer-logo">82 AIRBORNE</div><p class="footer-text">FALCON BRIGADE</p><p class="footer-text">ALL THE WAY.</p></div></footer>
-<script>async function loadRobloxAvatars(){for(const image of document.querySelectorAll("[data-user-id]")){try{const r=await fetch(`https://thumbnails.roblox.com/v1/users/avatar?userIds=${image.dataset.userId}&size=420x420&format=Png&isCircular=false`),d=await r.json();if(d.data?.[0]?.imageUrl){image.src=d.data[0].imageUrl;image.style.display="block";const l=image.parentElement.querySelector(".avatar-loading");if(l)l.style.display="none"}}catch(e){console.error("Unable to load Roblox avatar:",image.dataset.userId,e)}}}loadRobloxAvatars();</script>
+<script>
+async function loadRobloxAvatars(){
+  for(const image of document.querySelectorAll("[data-user-id]")){
+    const userId=image.dataset.userId;
+    const loading=image.parentElement.querySelector(".avatar-loading");
+    const fallback="https://www.roblox.com/headshot-thumbnail/image?userId="+userId+"&width=420&height=420&format=png";
+    image.onload=()=>{image.style.display="block";if(loading)loading.style.display="none";};
+    image.onerror=()=>{if(image.src!==fallback) image.src=fallback;};
+    try{
+      const response=await fetch("https://thumbnails.roblox.com/v1/users/avatar?userIds="+userId+"&size=420x420&format=Png&isCircular=false");
+      const data=await response.json();
+      const avatarUrl=data.data && data.data[0] && data.data[0].imageUrl;
+      image.src=avatarUrl || fallback;
+    }catch(error){
+      console.error("Roblox avatar API failed:",userId,error);
+      image.src=fallback;
+    }
+  }
+}
+loadRobloxAvatars();
+</script>
 </body></html>
