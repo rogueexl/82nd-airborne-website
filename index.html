@@ -99,7 +99,18 @@
   <div><span class="index">05 / DIVISION NEWS</span><h2>THE LATEST<br><em>FROM THE AIRBORNE.</em></h2></div>
   <p>Division announcements, updates, developments, and stories from across the 82nd Airborne Division.</p>
 </div>
-<div id="news-list" class="news-sections"><section class="news-section" data-section="division"><div class="news-section-head"><span class="news-section-index">01 / DIVISION WIDE</span><h3>DIVISION<br><em>NEWS.</em></h3></div><div class="news-section-grid" id="news-division"></div></section><section class="news-section" data-section="falcon"><div class="news-section-head"><span class="news-section-index">02 / FALCON BRIGADE</span><h3>FALCON<br><em>BRIGADE.</em></h3></div><div class="news-section-grid" id="news-falcon"></div></section><section class="news-section" data-section="panther"><div class="news-section-head"><span class="news-section-index">03 / PANTHER BRIGADE</span><h3>PANTHER<br><em>BRIGADE.</em></h3></div><div class="news-section-grid" id="news-panther"></div></section><section class="news-section" data-section="black-hats"><div class="news-section-head"><span class="news-section-index">04 / BLACK HATS BRIGADE</span><h3>BLACK HATS<br><em>BRIGADE.</em></h3></div><div class="news-section-grid" id="news-black-hats"></div></section><section class="news-section" data-section="pegasus"><div class="news-section-head"><span class="news-section-index">05 / PEGASUS BRIGADE</span><h3>PEGASUS<br><em>BRIGADE.</em></h3></div><div class="news-section-grid" id="news-pegasus"></div></section></div>
+<div id="news-list" class="news-sections">
+  <button class="news-division-card" type="button" data-news-section="division">
+    <span class="news-section-index">01 / DIVISION WIDE</span><div><h3>DIVISION <em>NEWS.</em></h3><p id="news-division-preview">VIEW ALL DIVISION-WIDE STORIES</p></div><span class="news-card-arrow">↗</span>
+  </button>
+  <div class="news-brigade-grid">
+    <button class="news-brigade-card" type="button" data-news-section="falcon"><span class="news-section-index">02</span><h3>FALCON<br><em>BRIGADE.</em></h3><span id="news-falcon-count">0 STORIES</span><span class="news-card-arrow">↗</span></button>
+    <button class="news-brigade-card" type="button" data-news-section="panther"><span class="news-section-index">03</span><h3>PANTHER<br><em>BRIGADE.</em></h3><span id="news-panther-count">0 STORIES</span><span class="news-card-arrow">↗</span></button>
+    <button class="news-brigade-card" type="button" data-news-section="black-hats"><span class="news-section-index">04</span><h3>BLACK HATS<br><em>BRIGADE.</em></h3><span id="news-black-hats-count">0 STORIES</span><span class="news-card-arrow">↗</span></button>
+    <button class="news-brigade-card" type="button" data-news-section="pegasus"><span class="news-section-index">05</span><h3>PEGASUS<br><em>BRIGADE.</em></h3><span id="news-pegasus-count">0 STORIES</span><span class="news-card-arrow">↗</span></button>
+  </div>
+</div>
+<div class="news-section-modal" id="news-section-modal" aria-hidden="true"><div class="news-section-modal-backdrop" data-close-section></div><div class="news-section-modal-box"><button class="news-article-close" type="button" data-close-section aria-label="Close">×</button><div class="news-section-modal-head"><span id="section-modal-index"></span><h3 id="section-modal-title"></h3><p>STORIES ARE DISPLAYED NEWEST FIRST · ALL TIMES UTC</p></div><div id="section-modal-list" class="news-section-modal-list"></div></div></div>
 <div class="news-article-modal" id="news-article-modal" aria-hidden="true"><div class="news-article-backdrop" data-close-news></div><article class="news-article-box"><button class="news-article-close" type="button" data-close-news aria-label="Close">×</button><div class="news-article-meta"><span id="article-category"></span><time id="article-date"></time></div><h3 id="article-title"></h3><p class="news-article-summary" id="article-summary"></p><div class="news-article-body" id="article-body"></div></article></div>
 <section id="propaganda" class="propaganda">
 <div class="archive-head"><div><span class="index">05 / AIRBORNE PROPAGANDA</span><h2>PROPAGANDA<br><em>SECTION.</em></h2></div><p>This section is currently being rebuilt with original 82nd Airborne propaganda and division media.</p></div>
@@ -132,51 +143,56 @@ function setReviewStatus(message, good=false){
 
 
 async function loadNews(){
-  const sectionMap={division:'news-division',falcon:'news-falcon',panther:'news-panther','black-hats':'news-black-hats',pegasus:'news-pegasus'};
-  const list=document.getElementById('news-list');
-  if(!list)return;
+  const sectionNames={division:'DIVISION WIDE',falcon:'FALCON BRIGADE',panther:'PANTHER BRIGADE','black-hats':'BLACK HATS BRIGADE',pegasus:'PEGASUS BRIGADE'};
+  const grouped={division:[],falcon:[],panther:[],'black-hats':[],pegasus:[]};
   try{
     const res=await fetch(SUPABASE_URL+'/rest/v1/news?select=id,title,category,summary,body,created_at&published=eq.true&order=created_at.desc&limit=100',{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}});
     if(!res.ok)throw new Error();
     const rows=await res.json();
-    const esc=v=>String(v||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
-    const date=v=>new Date(v).toLocaleDateString('en-US',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
-    Object.values(sectionMap).forEach(id=>{document.getElementById(id).innerHTML='';});
-    rows.forEach((r)=>{
+    rows.forEach(r=>{
       const raw=String(r.category||'').toLowerCase();
       const section=raw.includes('falcon')?'falcon':raw.includes('panther')?'panther':raw.includes('black hats')||raw.includes('black-hats')?'black-hats':raw.includes('pegasus')?'pegasus':'division';
-      const target=document.getElementById(sectionMap[section]);
-      if(!target)return;
-      const card=document.createElement('article');
-      card.className='news-card';
-      card.dataset.id=r.id;
-      card.innerHTML='<div class="news-meta"><span>'+esc(r.category||'DIVISION NEWS')+'</span><time>'+date(r.created_at)+'</time></div><h4>'+esc(r.title).replace(/\\n/g,'<br>')+'</h4><p>'+esc(r.summary)+'</p><span class="news-read">READ STORY <b>↗</b></span>';
-      card.addEventListener('click',()=>openNewsArticle(r));
-      target.appendChild(card);
+      grouped[section].push(r);
     });
-    Object.entries(sectionMap).forEach(([key,id])=>{
-      const grid=document.getElementById(id);
-      if(!grid.children.length)grid.innerHTML='<div class="news-empty">NO STORIES PUBLISHED IN THIS SECTION YET.</div>';
-    });
+    const esc=v=>String(v||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    const utc=v=>new Date(v).toLocaleString('en-US',{timeZone:'UTC',month:'short',day:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})+' UTC';
+    document.getElementById('news-division-preview').textContent=grouped.division.length?grouped.division.length+' STORIES · CLICK TO VIEW ALL':'NO STORIES PUBLISHED YET';
+    ['falcon','panther','black-hats','pegasus'].forEach(k=>document.getElementById('news-'+k+'-count').textContent=grouped[k].length+' '+(grouped[k].length===1?'STORY':'STORIES'));
+    window.newsSections=grouped;
+    window.newsSectionNames=sectionNames;
+    document.querySelectorAll('[data-news-section]').forEach(el=>el.onclick=()=>openNewsSection(el.dataset.newsSection));
+    window.newsUtc=utc;
   }catch(e){console.warn('News could not load',e);}
 }
-
+function openNewsSection(section){
+  const rows=(window.newsSections&&window.newsSections[section])||[];
+  document.getElementById('section-modal-index').textContent=section==='division'?'01 / DIVISION WIDE':'BRIGADE NEWS';
+  document.getElementById('section-modal-title').textContent=window.newsSectionNames?.[section]||'NEWS';
+  const list=document.getElementById('section-modal-list');
+  if(!rows.length){list.innerHTML='<div class="news-empty">NO STORIES PUBLISHED IN THIS SECTION YET.</div>';}
+  else{
+    list.innerHTML='';
+    rows.forEach(r=>{
+      const card=document.createElement('button'); card.type='button'; card.className='news-section-story';
+      card.innerHTML='<div><span class="news-story-category">'+String(r.category||'DIVISION NEWS').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))+'</span><h4>'+String(r.title||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))+'</h4><p>'+String(r.summary||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))+'</p></div><time>'+window.newsUtc(r.created_at)+'</time>';
+      card.onclick=()=>openNewsArticle(r); list.appendChild(card);
+    });
+  }
+  const modal=document.getElementById('news-section-modal'); modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('news-modal-open');
+}
+function closeNewsSection(){const m=document.getElementById('news-section-modal');m.classList.remove('is-open');m.setAttribute('aria-hidden','true');document.body.classList.remove('news-modal-open');}
+document.querySelectorAll('[data-close-section]').forEach(el=>el.addEventListener('click',closeNewsSection));
 function openNewsArticle(r){
   document.getElementById('article-category').textContent=r.category||'DIVISION NEWS';
-  document.getElementById('article-date').textContent=new Date(r.created_at).toLocaleDateString('en-US',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
+  document.getElementById('article-date').textContent=new Date(r.created_at).toLocaleString('en-US',{timeZone:'UTC',day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})+' UTC';
   document.getElementById('article-title').textContent=r.title||'';
   document.getElementById('article-summary').textContent=r.summary||'';
   document.getElementById('article-body').textContent=r.body||r.summary||'';
-  const modal=document.getElementById('news-article-modal');
-  modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.classList.add('news-modal-open');
+  const modal=document.getElementById('news-article-modal'); modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.classList.add('news-modal-open');
 }
-function closeNewsArticle(){
-  const modal=document.getElementById('news-article-modal');
-  modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('news-modal-open');
-}
+function closeNewsArticle(){const modal=document.getElementById('news-article-modal');modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('news-modal-open');}
 document.querySelectorAll('[data-close-news]').forEach(el=>el.addEventListener('click',closeNewsArticle));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeNewsArticle();});
-
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNewsArticle();closeNewsSection();}});
 async function loadReviews(){
   try{
     const res = await fetch(SUPABASE_URL+'/rest/v1/reviews?select=roblox_username,rating,review_text,roblox_user_id,created_at&status=eq.approved&order=created_at.desc', {
