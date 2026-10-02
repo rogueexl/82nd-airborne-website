@@ -254,24 +254,6 @@ const miniAudio=document.getElementById("mini-audio");
 const miniName=document.getElementById("mini-track-name");
 const miniPlay=document.getElementById("mini-play");
 const miniVolume=document.getElementById("mini-volume");
-let miniSecretClicks=0, miniSecretTimer=null;
-function playSecretRickroll(){
-  miniName.textContent="Rickroll // Secret Track";
-  miniAudio.pause();
-  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
-  const ac=new AC(),master=ac.createGain();master.gain.value=.14;master.connect(ac.destination);
-  const notes=[246.94,246.94,293.66,329.63,293.66,246.94,220,196,220,246.94,261.63,246.94,220,196,246.94,293.66,329.63,293.66,246.94,220,196,220,246.94,293.66,329.63,293.66,246.94,220];
-  const bass=[146.83,146.83,174.61,174.61,196,196,130.81,130.81];
-  const start=ac.currentTime+.05,beat=.38;
-  bass.forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain(),t=start+i*beat;o.type="triangle";o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.1,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+beat*.9);o.connect(g).connect(master);o.start(t);o.stop(t+beat);});
-  notes.forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain(),t=start+i*beat;o.type="square";o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.16,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+beat*.82);o.connect(g).connect(master);o.start(t);o.stop(t+beat);});
-  setTimeout(()=>ac.close(),12500);
-}
-miniName.addEventListener("click",()=>{
-  miniSecretClicks++;clearTimeout(miniSecretTimer);
-  miniSecretTimer=setTimeout(()=>miniSecretClicks=0,1200);
-  if(miniSecretClicks>=5){miniSecretClicks=0;playSecretRickroll();}
-});
 function miniLoad(i,autoplay=false){
  miniIndex=(i+miniTracks.length)%miniTracks.length;
  miniName.textContent=miniTracks[miniIndex][0];
