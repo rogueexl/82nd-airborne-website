@@ -222,3 +222,11 @@ body.modal-open{overflow:hidden}
 .mini-radio-volume{display:flex;align-items:center;gap:6px}.mini-radio-volume span{font-size:7px;color:#6d7e8e;letter-spacing:1px}.mini-radio-volume input{width:62px;accent-color:#3d8cff}
 .mini-radio>a{color:#7eabdf;text-decoration:none;font-size:15px}.mini-radio>a:hover{color:#fff}
 @media(max-width:650px){.mini-radio{right:10px;bottom:10px;width:calc(100vw - 20px);gap:8px;padding:10px}.mini-radio-volume{display:none}.mini-radio-title b{font-size:14px}}
+
+
+/* Brigade logos */
+.b-card{position:relative;}
+.b-card-logo{position:absolute;top:24px;right:24px;width:72px;height:72px;object-fit:contain;z-index:2;filter:drop-shadow(0 8px 14px rgba(0,0,0,.38));transition:transform .3s ease,filter .3s ease;}
+.b-card:hover .b-card-logo{transform:scale(1.08) rotate(-2deg);filter:drop-shadow(0 10px 20px rgba(0,0,0,.5));}
+.b-card strong,.b-card small,.b-card span,.b-card>b{position:relative;z-index:3;}
+@media(max-width:650px){.b-card-logo{width:58px;height:58px;top:18px;right:18px;}}
