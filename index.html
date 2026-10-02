@@ -175,7 +175,7 @@ function openNewsSection(section){
     rows.forEach(r=>{
       const card=document.createElement('button'); card.type='button'; card.className='news-section-story';
       card.innerHTML='<div><span class="news-story-category">'+String(r.category||'DIVISION NEWS').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))+'</span><h4>'+String(r.title||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))+'</h4><p>'+String(r.summary||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]))+'</p></div><time>'+window.newsUtc(r.created_at)+'</time>';
-      card.onclick=()=>openNewsArticle(r); list.appendChild(card);
+      card.onclick=()=>{closeNewsSection();openNewsArticle(r);}; list.appendChild(card);
     });
   }
   const modal=document.getElementById('news-section-modal'); modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('news-modal-open');
