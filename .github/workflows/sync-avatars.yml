@@ -21,7 +21,7 @@ jobs:
           set -e
           mkdir -p images/avatars
 
-          usernames="evnxl Dannyxl05 DushiNL0 Chocooza XxrealAntCrewXx smith0dev rogueexl dabbbbaa22 EnjoyCash Evader19237iwiw resonancescream jjgogmn234 ghosttttxl thebiggiant1122 SwimiumSon scrxptz_ll ocpstandard drensify Whatthedawgdoin98 Number3Yankee AAPyro_II freegift497 exmplI dgrgcdd1 ABU_ALMAN1 parrot3608 VenomFlint Korblox_B IamNooobOMG_2 thelastone5000 sptheking222 NoVaRusski"
+          usernames="evnxl Dannyxl05 DushiNL0 Chocooza XxrealAntCrewXx smith0dev rogueexl dabbbbaa22 EnjoyCash Evader19237iwiw resonancescream jjgogmn234 ghosttttxl thebiggiant1122 SwimiumSon scrxptz_ll ocpstandard drensify Whatthedawgdoin98 Number3Yankee AAPyro_II freegift497 exmplI dgrgcdd1 ABU_ALMAN1 parrot3608 VenomFlint Korblox_B IamNooobOMG_2 thelastone5000 sptheking222 NoVaRusski lolalvin1234"
 
           for name in $usernames; do
             payload=$(jq -nc --arg username "$name" '{usernames:[$username],excludeBannedUsers:false}')
