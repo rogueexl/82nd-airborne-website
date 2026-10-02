@@ -244,73 +244,64 @@ loadReviews();
 const miniTracks=[
 ["The Stars and Stripes Forever","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Stars_and_Stripes_Forever_-_U.S._Army_Band.ogg"],
 ["The Thunderer","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Thunderer_-_U.S._Army_Band.ogg"],
-["Blood Upon the Risers — Instrumental","https://commons.wikimedia.org/wiki/Special:Redirect/file/Battle_Hymn_of_the_Republic_(USAFB).ogg"],
 ["National Emblem March","https://commons.wikimedia.org/wiki/Special:Redirect/file/National_Emblem_-_U.S._Army_Band.ogg"],
 ["The Invincible Eagle","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Invincible_Eagle_-_U.S._Army_Band.ogg"],
 ["Washington Post March","https://commons.wikimedia.org/wiki/Special:Redirect/file/Washington_Post_March_-_U.S._Army_Band.ogg"]
 ];
+
 let miniIndex=0;
 const miniAudio=document.getElementById("mini-audio");
 const miniName=document.getElementById("mini-track-name");
 const miniPlay=document.getElementById("mini-play");
 const miniVolume=document.getElementById("mini-volume");
+
 function miniLoad(i,autoplay=false){
-  stopBlood();
   miniIndex=(i+miniTracks.length)%miniTracks.length;
-  miniName.textContent=miniTracks[miniIndex][0];
-  miniAudio.pause();
-  miniAudio.removeAttribute("src");
-  miniAudio.load();
+  const track=miniTracks[miniIndex];
+  miniName.textContent=track[0];
+  miniAudio.src=track[1];
   miniAudio.volume=Number(miniVolume.value);
   miniPlay.textContent="▶";
-
-  if(miniTracks[miniIndex][1]){
-    miniAudio.src=miniTracks[miniIndex][1];
-    if(autoplay)miniAudio.play().then(()=>miniPlay.textContent="❚❚").catch(()=>{});
-  }else if(autoplay){
-    playBlood();
+  if(autoplay){
+    miniAudio.play().catch(()=>{});
   }
 }
 
-document.getElementById("mini-prev").onclick=()=>miniLoad(miniIndex-1,true);
-document.getElementById("mini-next").onclick=()=>miniLoad(miniIndex+1,true);
+document.getElementById("mini-prev").addEventListener("click",()=>{
+  miniLoad(miniIndex-1,true);
+});
 
-miniPlay.onclick=async()=>{
-  if(miniIndex===2){
-    if(bloodPlaying){stopBlood();miniPlay.textContent="▶";}
-    else playBlood();
-    return;
-  }
+document.getElementById("mini-next").addEventListener("click",()=>{
+  miniLoad(miniIndex+1,true);
+});
+
+miniPlay.addEventListener("click",async()=>{
   if(miniAudio.paused){
     try{await miniAudio.play();}catch(e){}
   }else{
     miniAudio.pause();
   }
-};
+});
 
 miniVolume.addEventListener("input",()=>{
   miniAudio.volume=Number(miniVolume.value);
-  if(bloodCtx)bloodCtx.destination.channelCount=1;
 });
 
-miniAudio.addEventListener("play",()=>miniPlay.textContent="❚❚");
-miniAudio.addEventListener("pause",()=>{if(miniIndex!==2)miniPlay.textContent="▶";});
-miniAudio.addEventListener("ended",()=>miniLoad(miniIndex+1,true));
-miniLoad(0,true);
-</script><script>
-(function(){
-  let clicks=0,timer=null;
-  document.addEventListener("click",function(e){
-    const target=e.target.closest(".site-easter-egg");
-    if(!target)return;
-    clicks++;
-    clearTimeout(timer);
-    timer=setTimeout(()=>clicks=0,1400);
-    if(clicks>=5){
-      clicks=0;
-      window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ","_blank","noopener,noreferrer");
-    }
-  });
-})();
-</script>
-</body></html>
+miniAudio.addEventListener("play",()=>{
+  miniPlay.textContent="❚❚";
+});
+
+miniAudio.addEventListener("pause",()=>{
+  miniPlay.textContent="▶";
+});
+
+miniAudio.addEventListener("ended",()=>{
+  miniLoad(miniIndex+1,true);
+});
+
+miniAudio.addEventListener("error",()=>{
+  miniPlay.textContent="▶";
+});
+
+miniLoad(0,false);
+</script></body></html>
