@@ -1,0 +1,44 @@
+name: Fetch Roblox avatars
+
+on:
+  push:
+    paths:
+      - "images/avatars/**"
+      - ".github/workflows/fetch-roblox-avatars.yml"
+      - "brigades/falcon.html"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch lolalvin1234 avatar
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p images/avatars
+          json="$(curl -fsSL 'https://thumbnails.roblox.com/v1/users/avatar?userIds=1744485578&size=420x420&format=Png&isCircular=false')"
+          image_url="$(python3 -c 'import json,sys; print(json.load(sys.stdin)["data"][0]["imageUrl"])' <<< "$json")"
+          curl -fsSL "$image_url" -o images/avatars/lolalvin1234.png
+          file images/avatars/lolalvin1234.png
+          test -s images/avatars/lolalvin1234.png
+
+      - name: Commit avatar if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- images/avatars/lolalvin1234.png; then
+            echo "Avatar is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/avatars/lolalvin1234.png
+          git commit -m "Add lolalvin1234 Roblox avatar"
+          git push
