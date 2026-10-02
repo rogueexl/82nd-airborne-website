@@ -31,7 +31,7 @@ const authStatus=document.getElementById('authStatus'), status=document.getEleme
 async function api(path,opt={}){opt.headers={...(opt.headers||{}),apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'};return fetch(URL+'/rest/v1/'+path,opt)}
 async function load(){
  const r=await api('news?select=id,title,category,summary,published,created_at&order=created_at.desc');
- const rows=await r.json(); document.getElementById('list').innerHTML=rows.map(x=>'<div class="item"><div><h3>'+esc(x.title)+'</h3><p>'+esc(x.category)+' // '+(x.published?'PUBLISHED':'DRAFT')+'</p></div><button class="delete" data-id="'+x.id+'">DELETE</button></div>').join('');
+ if(!r.ok){const d=await r.json().catch(()=>({})); document.getElementById('list').innerHTML='<p style="color:#e28a99">Could not load news: '+esc(d.message||d.error_description||d.hint||d.details||('HTTP '+r.status))+'</p>';return} const rows=await r.json(); document.getElementById('list').innerHTML=rows.map(x=>'<div class="item"><div><h3>'+esc(x.title)+'</h3><p>'+esc(x.category)+' // '+(x.published?'PUBLISHED':'DRAFT')+'</p></div><button class="delete" data-id="'+x.id+'">DELETE</button></div>').join('');
  document.querySelectorAll('.delete').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this news post?'))return;await api('news?id=eq.'+b.dataset.id,{method:'DELETE'});load()});
 }
 document.getElementById('login').onclick=async()=>{
@@ -40,8 +40,8 @@ document.getElementById('login').onclick=async()=>{
  token=d.access_token; authStatus.textContent='SIGNED IN';document.getElementById('authPanel').hidden=true;document.getElementById('editor').hidden=false;document.getElementById('items').hidden=false;load();
 };
 document.getElementById('publish').onclick=async()=>{
- status.textContent='PUBLISHING...'; const r=await api('news',{method:'POST',body:JSON.stringify({title:title.value.trim(),category:category.value.trim(),summary:summary.value.trim(),body:body.value,published:published.value==='true'})});
- if(!r.ok){status.textContent='Could not publish news.';return} status.textContent='PUBLISHED.';status.className='good';title.value='';summary.value='';body.value='';load();
+ status.textContent='PUBLISHING...'; const r=await api('news',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({title:title.value.trim(),category:category.value.trim(),summary:summary.value.trim(),body:body.value,published:published.value==='true'})});
+ if(!r.ok){const d=await r.json().catch(()=>({})); status.className=''; status.textContent=d.message||d.error_description||d.hint||d.details||('Publish failed (HTTP '+r.status+').');return} status.textContent='PUBLISHED.';status.className='good';title.value='';summary.value='';body.value='';load();
 };
 function esc(v){return String(v||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 </script>
