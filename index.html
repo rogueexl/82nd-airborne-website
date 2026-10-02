@@ -244,7 +244,7 @@ loadReviews();
 const miniTracks=[
 ["The Stars and Stripes Forever","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Stars_and_Stripes_Forever_-_U.S._Army_Band.ogg"],
 ["The Thunderer","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Thunderer_-_U.S._Army_Band.ogg"],
-["Blood Upon the Risers — Instrumental",null],
+["Blood Upon the Risers — Instrumental","https://commons.wikimedia.org/wiki/Special:Redirect/file/Battle_Hymn_of_the_Republic_(USAFB).ogg"],
 ["National Emblem March","https://commons.wikimedia.org/wiki/Special:Redirect/file/National_Emblem_-_U.S._Army_Band.ogg"],
 ["The Invincible Eagle","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Invincible_Eagle_-_U.S._Army_Band.ogg"],
 ["Washington Post March","https://commons.wikimedia.org/wiki/Special:Redirect/file/Washington_Post_March_-_U.S._Army_Band.ogg"]
@@ -254,75 +254,6 @@ const miniAudio=document.getElementById("mini-audio");
 const miniName=document.getElementById("mini-track-name");
 const miniPlay=document.getElementById("mini-play");
 const miniVolume=document.getElementById("mini-volume");
-let bloodCtx=null,bloodTimer=null,bloodPlaying=false;
-
-function stopBlood(){
-  if(bloodTimer){clearTimeout(bloodTimer);bloodTimer=null;}
-  if(bloodCtx){try{bloodCtx.close();}catch(e){} bloodCtx=null;}
-  bloodPlaying=false;
-}
-
-function playBlood(){
-  stopBlood();
-  const AC=window.AudioContext||window.webkitAudioContext;
-  if(!AC)return;
-  bloodCtx=new AC();
-  const ac=bloodCtx;
-  const master=ac.createGain();
-  master.gain.value=Number(miniVolume.value)*0.55;
-  master.connect(ac.destination);
-  const bpm=104, beat=60/bpm;
-  const hz=n=>440*Math.pow(2,(n-69)/12);
-
-  // Public-domain Battle Hymn melody — the tune used by Blood Upon the Risers.
-  const melody=[
-    [67,.75],[67,.25],[67,.75],[65,.25],[64,.75],[67,.25],[72,.75],[74,.25],
-    [76,.75],[76,.25],[76,.75],[74,.25],[72,1.5],
-    [72,.75],[72,.25],[69,.75],[69,.25],[69,.75],[71,.25],[72,.75],[72,.25],[71,.75],[69,.25],
-    [67,1.5],[69,.75],[67,.25],[64,.75],[67,1.5]
-  ];
-  const bass=[48,43,41,48,48,43,41,48];
-  const start=ac.currentTime+.08;
-  let t=start;
-
-  for(let rep=0;rep<2;rep++){
-    for(const [note,beats] of melody){
-      const d=beats*beat;
-      const o=ac.createOscillator(),g=ac.createGain();
-      o.type="triangle";o.frequency.value=hz(note);
-      g.gain.setValueAtTime(.0001,t);
-      g.gain.linearRampToValueAtTime(.10,t+.025);
-      g.gain.setValueAtTime(.075,t+Math.max(.04,d-.08));
-      g.gain.exponentialRampToValueAtTime(.0001,t+d-.015);
-      o.connect(g).connect(master);o.start(t);o.stop(t+d);
-      t+=d;
-    }
-  }
-
-  // Marching low brass + snare-like pulse.
-  const total=t-start;
-  for(let i=0;i<Math.ceil(total/beat);i++){
-    const tt=start+i*beat;
-    const n=bass[i%bass.length];
-    const b=ac.createOscillator(),bg=ac.createGain();
-    b.type="sawtooth";b.frequency.value=hz(n);
-    bg.gain.setValueAtTime(.0001,tt);
-    bg.gain.linearRampToValueAtTime(.045,tt+.02);
-    bg.gain.exponentialRampToValueAtTime(.0001,tt+beat*.8);
-    b.connect(bg).connect(master);b.start(tt);b.stop(tt+beat*.82);
-
-    const click=ac.createOscillator(),cg=ac.createGain();
-    click.type="square";click.frequency.value=180;
-    cg.gain.setValueAtTime(i%2?0.018:0.035,tt);
-    cg.gain.exponentialRampToValueAtTime(.0001,tt+.055);
-    click.connect(cg).connect(master);click.start(tt);click.stop(tt+.06);
-  }
-
-  bloodPlaying=true;
-  miniPlay.textContent="❚❚";
-  bloodTimer=setTimeout(()=>{stopBlood();miniPlay.textContent="▶";},(total+.5)*1000);
-}
-
 function miniLoad(i,autoplay=false){
   stopBlood();
   miniIndex=(i+miniTracks.length)%miniTracks.length;
