@@ -244,118 +244,126 @@ loadReviews();
 const miniTracks=[
 ["The Stars and Stripes Forever","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Stars_and_Stripes_Forever_-_U.S._Army_Band.ogg"],
 ["The Thunderer","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Thunderer_-_U.S._Army_Band.ogg"],
-["Blood Upon the Risers — Instrumental (Original Arrangement)",null],
+["Blood Upon the Risers — Instrumental",null],
 ["National Emblem March","https://commons.wikimedia.org/wiki/Special:Redirect/file/National_Emblem_-_U.S._Army_Band.ogg"],
 ["The Invincible Eagle","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Invincible_Eagle_-_U.S._Army_Band.ogg"],
 ["Washington Post March","https://commons.wikimedia.org/wiki/Special:Redirect/file/Washington_Post_March_-_U.S._Army_Band.ogg"]
 ];
-
-async function buildBloodRisers(){
-  const sampleRate=22050,bpm=92,beat=60/bpm;
-  const notes={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
-  const seq=[["G4",.75],["G4",.25],["G4",.75],["F4",.25],["E4",.75],["G4",.75],["C5",.75],["D5",.25],["E5",.75],["E5",.25],["E5",.75],["D5",.25],["C5",1.5],["C5",.75],["C5",.25],["A4",.75],["A4",.25],["B4",.75],["C5",.75],["B4",.75],["A4",.75],["G4",.75],["A4",.25],["G4",.75],["E4",.75],["G4",1.5]];
-  const freq=n=>440*Math.pow(2/Math.pow(2,0),((parseInt(n.slice(1))+1)*12+notes[n[0]]-69)/12);
-  const duration=seq.reduce((a,x)=>a+x[1],0)*beat;
-  const ctx=new OfflineAudioContext(1,Math.ceil((duration*2+1)*sampleRate),sampleRate);
-  const master=ctx.createGain(); master.gain.value=.42; master.connect(ctx.destination);
-  function tone(f,t,d,amp,type="sawtooth"){
-    const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;
-    g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(amp,t+.018);g.gain.setValueAtTime(amp,t+Math.max(.02,d-.07));g.gain.exponentialRampToValueAtTime(.0001,t+d);
-    o.connect(g).connect(master);o.start(t);o.stop(t+d);
-  }
-  for(let rep=0;rep<2;rep++){
-    let t=rep*duration;
-    for(const [n,d] of seq){tone(freq(n),t,d*beat*.96,.11,"sawtooth");t+=d*beat;}
-    for(let b=0;b<duration/beat;b+=.5){
-      const bt=rep*duration+b*beat;
-      if(Math.round(b)%3===0) tone(98,bt,.18,.16,"square");
-      if(Math.round(b)%3===2) tone(73.42,bt,.18,.12,"square");
-    }
-  }
-  const buf=await ctx.startRendering();
-  const wav=new ArrayBuffer(44+buf.length*2),dv=new DataView(wav);
-  const ws=(o,s)=>{for(let i=0;i<s.length;i++)dv.setUint8(o+i,s.charCodeAt(i));};
-  ws(0,"RIFF");dv.setUint32(4,36+buf.length*2,true);ws(8,"WAVE");ws(12,"fmt ");dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,1,true);dv.setUint32(24,sampleRate,true);dv.setUint32(28,sampleRate*2,true);dv.setUint16(32,2,true);dv.setUint16(34,16,true);ws(36,"data");dv.setUint32(40,buf.length*2,true);
-  const ch=buf.getChannelData(0);for(let i=0;i<ch.length;i++)dv.setInt16(44+i*2,Math.max(-1,Math.min(1,ch[i]))*32767,true);
-  return URL.createObjectURL(new Blob([wav],{type:"audio/wav"}));
-}
 let miniIndex=0;
 const miniAudio=document.getElementById("mini-audio");
 const miniName=document.getElementById("mini-track-name");
 const miniPlay=document.getElementById("mini-play");
 const miniVolume=document.getElementById("mini-volume");
-let bloodAudioContext=null,bloodNodes=[];
-function playBloodUponRisers(){
-  if(bloodAudioContext){try{bloodAudioContext.close();}catch(e){}}
-  bloodAudioContext=new (window.AudioContext||window.webkitAudioContext)();
-  const ac=bloodAudioContext, now=ac.currentTime;
-  const bpm=132, beat=60/bpm;
-  const semis={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+let bloodCtx=null,bloodTimer=null,bloodPlaying=false;
+
+function stopBlood(){
+  if(bloodTimer){clearTimeout(bloodTimer);bloodTimer=null;}
+  if(bloodCtx){try{bloodCtx.close();}catch(e){} bloodCtx=null;}
+  bloodPlaying=false;
+}
+
+function playBlood(){
+  stopBlood();
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)return;
+  bloodCtx=new AC();
+  const ac=bloodCtx;
+  const master=ac.createGain();
+  master.gain.value=Number(miniVolume.value)*0.55;
+  master.connect(ac.destination);
+  const bpm=104, beat=60/bpm;
   const hz=n=>440*Math.pow(2,(n-69)/12);
-  // Original instrumental arrangement of the public-domain Battle Hymn melody used for Blood Upon the Risers.
-  const melody=[67,67,69,67,72,71,67,67,69,67,74,72,67,67,79,76,72,71,69,65,65,64,62,60];
-  const beats=[1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,2,1,1,1,1,1,1,4];
-  let t=now+.05;
-  melody.forEach((m,k)=>{
-    const dur=beats[k]*beat;
-    const o=ac.createOscillator(), g=ac.createGain();
-    o.type="sawtooth"; o.frequency.value=hz(m);
-    g.gain.setValueAtTime(.0001,t);
-    g.gain.linearRampToValueAtTime(.055,t+.025);
-    g.gain.setValueAtTime(.045,t+Math.max(.03,dur-.12));
-    g.gain.exponentialRampToValueAtTime(.0001,t+dur-.02);
-    o.connect(g).connect(ac.destination); o.start(t); o.stop(t+dur);
-    // lower brass harmony
-    const b=ac.createOscillator(),bg=ac.createGain();
-    b.type="square"; b.frequency.value=hz(m-12);
-    bg.gain.setValueAtTime(.0001,t); bg.gain.linearRampToValueAtTime(.018,t+.03); bg.gain.exponentialRampToValueAtTime(.0001,t+dur-.03);
-    b.connect(bg).connect(ac.destination); b.start(t); b.stop(t+dur);
-    t+=dur;
-  });
-  const total=t-now;
-  for(let i=0;i<Math.ceil(total/beat);i++){
-    const tt=now+.05+i*beat;
-    const kick=ac.createOscillator(),kg=ac.createGain();
-    kick.frequency.setValueAtTime(120,tt);kick.frequency.exponentialRampToValueAtTime(55,tt+.08);
-    kg.gain.setValueAtTime(.12,tt);kg.gain.exponentialRampToValueAtTime(.0001,tt+.11);
-    kick.connect(kg).connect(ac.destination);kick.start(tt);kick.stop(tt+.12);
-    if(i%2===1){
-      const s=ac.createOscillator(),sg=ac.createGain();s.type="triangle";s.frequency.value=180;
-      sg.gain.setValueAtTime(.05,tt);sg.gain.exponentialRampToValueAtTime(.0001,tt+.07);
-      s.connect(sg).connect(ac.destination);s.start(tt);s.stop(tt+.08);
+
+  // Public-domain Battle Hymn melody — the tune used by Blood Upon the Risers.
+  const melody=[
+    [67,.75],[67,.25],[67,.75],[65,.25],[64,.75],[67,.25],[72,.75],[74,.25],
+    [76,.75],[76,.25],[76,.75],[74,.25],[72,1.5],
+    [72,.75],[72,.25],[69,.75],[69,.25],[69,.75],[71,.25],[72,.75],[72,.25],[71,.75],[69,.25],
+    [67,1.5],[69,.75],[67,.25],[64,.75],[67,1.5]
+  ];
+  const bass=[48,43,41,48,48,43,41,48];
+  const start=ac.currentTime+.08;
+  let t=start;
+
+  for(let rep=0;rep<2;rep++){
+    for(const [note,beats] of melody){
+      const d=beats*beat;
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.type="triangle";o.frequency.value=hz(note);
+      g.gain.setValueAtTime(.0001,t);
+      g.gain.linearRampToValueAtTime(.10,t+.025);
+      g.gain.setValueAtTime(.075,t+Math.max(.04,d-.08));
+      g.gain.exponentialRampToValueAtTime(.0001,t+d-.015);
+      o.connect(g).connect(master);o.start(t);o.stop(t+d);
+      t+=d;
     }
   }
-  setTimeout(()=>{try{ac.close();}catch(e){}},(total+1)*1000);
+
+  // Marching low brass + snare-like pulse.
+  const total=t-start;
+  for(let i=0;i<Math.ceil(total/beat);i++){
+    const tt=start+i*beat;
+    const n=bass[i%bass.length];
+    const b=ac.createOscillator(),bg=ac.createGain();
+    b.type="sawtooth";b.frequency.value=hz(n);
+    bg.gain.setValueAtTime(.0001,tt);
+    bg.gain.linearRampToValueAtTime(.045,tt+.02);
+    bg.gain.exponentialRampToValueAtTime(.0001,tt+beat*.8);
+    b.connect(bg).connect(master);b.start(tt);b.stop(tt+beat*.82);
+
+    const click=ac.createOscillator(),cg=ac.createGain();
+    click.type="square";click.frequency.value=180;
+    cg.gain.setValueAtTime(i%2?0.018:0.035,tt);
+    cg.gain.exponentialRampToValueAtTime(.0001,tt+.055);
+    click.connect(cg).connect(master);click.start(tt);click.stop(tt+.06);
+  }
+
+  bloodPlaying=true;
   miniPlay.textContent="❚❚";
+  bloodTimer=setTimeout(()=>{stopBlood();miniPlay.textContent="▶";},(total+.5)*1000);
 }
+
 function miniLoad(i,autoplay=false){
- miniIndex=(i+miniTracks.length)%miniTracks.length;
- miniName.textContent=miniTracks[miniIndex][0];
- miniAudio.pause();
- miniAudio.removeAttribute("src");
- miniAudio.load();
- miniAudio.volume=Number(miniVolume.value);
- miniPlay.textContent="▶";
- if(miniTracks[miniIndex][1]){
-   if(miniTracks[miniIndex][1]){miniAudio.src=miniTracks[miniIndex][1];}else{miniAudio.src="";buildBloodRisers().then(u=>{if(miniIndex===2){miniAudio.src=u;miniAudio.play().catch(()=>{});}});}
-   if(autoplay)miniAudio.play().then(()=>miniPlay.textContent="❚❚").catch(()=>{});
- }else if(autoplay){
-   playBloodUponRisers();
- }
+  stopBlood();
+  miniIndex=(i+miniTracks.length)%miniTracks.length;
+  miniName.textContent=miniTracks[miniIndex][0];
+  miniAudio.pause();
+  miniAudio.removeAttribute("src");
+  miniAudio.load();
+  miniAudio.volume=Number(miniVolume.value);
+  miniPlay.textContent="▶";
+
+  if(miniTracks[miniIndex][1]){
+    miniAudio.src=miniTracks[miniIndex][1];
+    if(autoplay)miniAudio.play().then(()=>miniPlay.textContent="❚❚").catch(()=>{});
+  }else if(autoplay){
+    playBlood();
+  }
 }
+
 document.getElementById("mini-prev").onclick=()=>miniLoad(miniIndex-1,true);
 document.getElementById("mini-next").onclick=()=>miniLoad(miniIndex+1,true);
+
 miniPlay.onclick=async()=>{
- if(miniAudio.paused){
-   try{await miniAudio.play();miniPlay.textContent="❚❚";}catch(e){}
- }else{
-   miniAudio.pause();
-   miniPlay.textContent="▶";
- }
+  if(miniIndex===2){
+    if(bloodPlaying){stopBlood();miniPlay.textContent="▶";}
+    else playBlood();
+    return;
+  }
+  if(miniAudio.paused){
+    try{await miniAudio.play();}catch(e){}
+  }else{
+    miniAudio.pause();
+  }
 };
-miniVolume.addEventListener("input",()=>{miniAudio.volume=Number(miniVolume.value);});
+
+miniVolume.addEventListener("input",()=>{
+  miniAudio.volume=Number(miniVolume.value);
+  if(bloodCtx)bloodCtx.destination.channelCount=1;
+});
+
 miniAudio.addEventListener("play",()=>miniPlay.textContent="❚❚");
-miniAudio.addEventListener("pause",()=>miniPlay.textContent="▶");
+miniAudio.addEventListener("pause",()=>{if(miniIndex!==2)miniPlay.textContent="▶";});
 miniAudio.addEventListener("ended",()=>miniLoad(miniIndex+1,true));
 miniLoad(0,true);
 </script><script>
