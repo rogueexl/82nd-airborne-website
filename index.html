@@ -28,7 +28,7 @@
 
 <div class="noise"></div><header class="top">
 <a class="logo" href="index.html"><span>82</span> AIRBORNE</a>
-<nav><a href="#division">DIVISION</a><a href="#brigades">BRIGADES</a><a href="#command">COMMAND</a><a href="#news">NEWS</a><a href="#propaganda">PROPAGANDA</a><a href="#recruit">JOIN</a><a href="#reviews">REVIEWS</a></nav>
+<nav><a href="#division">DIVISION</a><a href="#brigades">BRIGADES</a><a href="#command">COMMAND</a><a href="#news">NEWS</a><a href="#music">MUSIC</a><a href="#propaganda">PROPAGANDA</a><a href="#recruit">JOIN</a><a href="#reviews">REVIEWS</a></nav>
 <div class="top-right"><i></i> USAR / ONLINE</div>
 </header>
 
@@ -72,6 +72,21 @@
 
 <section id="recruit" class="join"><div><span class="index">04 / PERSONNEL</span><h2>FIND YOUR<br><em>DROP ZONE.</em></h2><p>Choose a brigade, find your role, and become part of the division.</p></div><a class="btn red" href="#">RECRUITMENT <b>↗</b></a></section>
 
+
+<section id="music" class="music-section">
+<div class="section-head"><div><span class="index">07 / AIRBORNE RADIO</span><h2>THE<br><em>MUSIC.</em></h2></div><p>A long-form military music playlist for the site. Start a track, keep browsing, and let the music run while you explore the division.</p></div>
+<div class="music-console">
+<div class="music-player">
+<div class="music-player-head"><div><span>NOW PLAYING // AIRBORNE RADIO</span><strong>AMERICAN MARCHES</strong></div><span class="music-live"><i></i> STREAMING</span></div>
+<div class="music-video"><iframe id="music-frame" src="https://www.youtube-nocookie.com/embed/GIN16wveer8?rel=0&modestbranding=1" title="American military marches playlist" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+<div class="music-player-foot"><span>FEATURED MIX // AMERICAN MILITARY MARCHES</span><a href="https://www.youtube.com/watch?v=GIN16wveer8" target="_blank" rel="noopener">OPEN IN YOUTUBE ↗</a></div>
+</div>
+<div class="music-list">
+<div class="music-list-head"><span>TRACK INDEX</span><span>20 SELECTIONS</span></div>
+<div class="music-track active" data-video="GIN16wveer8"><b>01</b><span>American Marches — Featured Mix</span><small>PLAY</small></div><div class="music-track " data-video="GIN16wveer8"><b>02</b><span>America the Beautiful</span><small>CLASSIC</small></div><div class="music-track " data-video="GIN16wveer8"><b>03</b><span>Anchors Aweigh</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>04</b><span>Ceremonial Medley</span><small>CEREMONIAL</small></div><div class="music-track " data-video="GIN16wveer8"><b>05</b><span>Stars and Stripes Forever</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>06</b><span>Emperor's Maneuver</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>07</b><span>Fix Bayonets</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>08</b><span>General Heywood</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>09</b><span>Hands Across the Sea</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>10</b><span>In God We Trust</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>11</b><span>Jack Tar</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>12</b><span>National Emblem</span><small>ARMY BAND</small></div><div class="music-track " data-video="GIN16wveer8"><b>13</b><span>Naval Academy March</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>14</b><span>Rifle Regiment</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>15</b><span>The Star-Spangled Banner</span><small>ANTHEM</small></div><div class="music-track " data-video="GIN16wveer8"><b>16</b><span>The Thunderer</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>17</b><span>Washington Post March</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>18</b><span>Semper Fidelis</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>19</b><span>Liberty Bell March</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>20</b><span>March Grandioso</span><small>CLASSIC</small></div>
+</div></div>
+<div class="music-note"><span>ARMY CEREMONIAL ARCHIVE</span><a href="https://usarmyband.com/ceremonial-music-guide" target="_blank" rel="noopener">VIEW FREE CEREMONIAL MUSIC COLLECTION ↗</a></div>
+</section>
 
 <section id="reviews" class="reviews">
 <div class="section-head"><div><span class="index">06 / DIVISION REVIEWS</span><h2>HEAR FROM<br><em>THE RANKS.</em></h2></div><p>Verified personnel can share their experience with the 82nd Airborne Division. Roblox account verification is required to submit a review.</p></div>
@@ -228,4 +243,4 @@ loadReviews();
   document.addEventListener('keydown',e => { if(e.key === 'Escape' && modal.classList.contains('is-open')) close(); });
 })();
 </script>
-</body></html>
+<script>document.querySelectorAll(".music-track").forEach(track=>track.addEventListener("click",()=>{document.querySelectorAll(".music-track").forEach(t=>t.classList.remove("active"));track.classList.add("active");document.getElementById("music-frame").src="https://www.youtube-nocookie.com/embed/GIN16wveer8?autoplay=1&rel=0&modestbranding=1";}));</script></body></html>
