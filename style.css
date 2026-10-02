@@ -214,3 +214,11 @@ body.modal-open{overflow:hidden}
 .music-note{display:flex;justify-content:space-between;gap:20px;margin-top:14px;padding:18px 20px;border:1px solid var(--line);background:#070b10;font-size:8px;letter-spacing:2px;color:#6f8295}
 @media(max-width:900px){.music-console{grid-template-columns:1fr}.music-list{max-height:430px}}
 @media(max-width:650px){.music-section{padding:85px 20px}.music-player-head{padding:18px}.music-player-head strong{font-size:22px}.music-player-foot{display:block;line-height:2}.music-player-foot a{display:block}.music-note{display:block;line-height:2}.music-note a{display:block}.music-track{grid-template-columns:28px 1fr}.music-track small{display:none}}
+
+/* Mini Airborne Radio */
+.mini-radio{position:fixed;right:22px;bottom:22px;z-index:9998;width:min(390px,calc(100vw - 32px));display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid rgba(61,140,255,.38);background:rgba(7,11,17,.94);backdrop-filter:blur(16px);box-shadow:0 12px 40px rgba(0,0,0,.45),0 0 28px rgba(61,140,255,.08)}
+.mini-radio-title{min-width:0;flex:1}.mini-radio-title span{display:block;font-size:7px;letter-spacing:2px;color:#6ea8ff}.mini-radio-title b{display:block;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:800 16px/.9 'Barlow Condensed';color:#f2f5f7}
+.mini-radio-controls{display:flex;gap:5px}.mini-radio button{width:28px;height:28px;border:1px solid rgba(255,255,255,.12);background:#0d141d;color:#dce5ed;cursor:pointer}.mini-radio button:hover{border-color:#3d8cff;color:#fff;background:#142238}
+.mini-radio-volume{display:flex;align-items:center;gap:6px}.mini-radio-volume span{font-size:7px;color:#6d7e8e;letter-spacing:1px}.mini-radio-volume input{width:62px;accent-color:#3d8cff}
+.mini-radio>a{color:#7eabdf;text-decoration:none;font-size:15px}.mini-radio>a:hover{color:#fff}
+@media(max-width:650px){.mini-radio{right:10px;bottom:10px;width:calc(100vw - 20px);gap:8px;padding:10px}.mini-radio-volume{display:none}.mini-radio-title b{font-size:14px}}
