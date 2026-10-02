@@ -255,38 +255,22 @@ const miniName=document.getElementById("mini-track-name");
 const miniPlay=document.getElementById("mini-play");
 const miniVolume=document.getElementById("mini-volume");
 let miniSecretClicks=0, miniSecretTimer=null;
-const miniSecretTrack=["Rickroll // Secret Track",null];
 function playSecretRickroll(){
-  miniName.textContent=miniSecretTrack[0];
+  miniName.textContent="Rickroll // Secret Track";
   miniAudio.pause();
-  miniAudio.removeAttribute("src");
-  miniAudio.load();
-  const AC=window.AudioContext||window.webkitAudioContext;
-  if(!AC)return;
-  const ac=new AC();
-  const notes=[392,440,493.88,440,392,329.63,349.23,392,440,493.88,523.25,493.88,440,392];
-  let t=ac.currentTime+.05;
-  notes.forEach((f,i)=>{
-    const o=ac.createOscillator(),g=ac.createGain();
-    o.type="square";o.frequency.value=f;
-    g.gain.setValueAtTime(.0001,t);
-    g.gain.exponentialRampToValueAtTime(.12,t+.015);
-    g.gain.exponentialRampToValueAtTime(.0001,t+.18);
-    o.connect(g).connect(ac.destination);o.start(t);o.stop(t+.19);t+=.2;
-  });
-  setTimeout(()=>ac.close(),3300);
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  const ac=new AC(),master=ac.createGain();master.gain.value=.14;master.connect(ac.destination);
+  const notes=[246.94,246.94,293.66,329.63,293.66,246.94,220,196,220,246.94,261.63,246.94,220,196,246.94,293.66,329.63,293.66,246.94,220,196,220,246.94,293.66,329.63,293.66,246.94,220];
+  const bass=[146.83,146.83,174.61,174.61,196,196,130.81,130.81];
+  const start=ac.currentTime+.05,beat=.38;
+  bass.forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain(),t=start+i*beat;o.type="triangle";o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.1,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+beat*.9);o.connect(g).connect(master);o.start(t);o.stop(t+beat);});
+  notes.forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain(),t=start+i*beat;o.type="square";o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.16,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+beat*.82);o.connect(g).connect(master);o.start(t);o.stop(t+beat);});
+  setTimeout(()=>ac.close(),12500);
 }
 miniName.addEventListener("click",()=>{
-  miniSecretClicks++;
-  clearTimeout(miniSecretTimer);
+  miniSecretClicks++;clearTimeout(miniSecretTimer);
   miniSecretTimer=setTimeout(()=>miniSecretClicks=0,1200);
-  if(miniSecretClicks>=5){
-    miniSecretClicks=0;
-    miniName.textContent=miniSecretTrack[0];
-    miniAudio.src=miniSecretTrack[1];
-    miniAudio.volume=Number(miniVolume.value);
-    playSecretRickroll();
-  }
+  if(miniSecretClicks>=5){miniSecretClicks=0;playSecretRickroll();}
 });
 function miniLoad(i,autoplay=false){
  miniIndex=(i+miniTracks.length)%miniTracks.length;
