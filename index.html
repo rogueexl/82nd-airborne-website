@@ -254,6 +254,16 @@ const miniAudio=document.getElementById("mini-audio");
 const miniName=document.getElementById("mini-track-name");
 const miniPlay=document.getElementById("mini-play");
 const miniVolume=document.getElementById("mini-volume");
+let miniSecretClicks=0, miniSecretTimer=null;
+miniName.addEventListener("click",()=>{
+  miniSecretClicks++;
+  clearTimeout(miniSecretTimer);
+  miniSecretTimer=setTimeout(()=>miniSecretClicks=0,1200);
+  if(miniSecretClicks>=5){
+    miniSecretClicks=0;
+    window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ","_blank","noopener,noreferrer");
+  }
+});
 function miniLoad(i,autoplay=false){
  miniIndex=(i+miniTracks.length)%miniTracks.length;
  miniName.textContent=miniTracks[miniIndex][0];
