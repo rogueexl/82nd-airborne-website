@@ -260,7 +260,7 @@ body.modal-open{overflow:hidden}
 
 /* News sections and article viewer */
 .news-sections{position:relative;z-index:2;margin-top:42px}
-.news-division-card{width:100%;min-height:190px;display:grid;grid-template-columns:1fr auto;align-items:end;text-align:left;padding:30px 34px;margin-bottom:16px;border:1px solid rgba(255,255,255,.13);background:linear-gradient(110deg,rgba(18,28,40,.96),rgba(9,13,19,.96));color:#fff;cursor:pointer;position:relative;overflow:hidden}
+.news-division-card{width:100%;min-height:190px;display:grid;grid-template-columns:1fr auto;align-items:end;text-align:left;padding:30px 34px;margin-bottom:16px;border:1px solid rgba(255,255,255,.13);background:linear-gradient(110deg,rgba(18,28,40,.96),rgba(9,13,19,.96));color:#fff;cursor:pointer;position:relative;overflow:hidden;transition:.2s}
 .news-division-card:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(93,160,255,.10),transparent 55%);pointer-events:none}
 .news-division-card:hover,.news-brigade-card:hover{border-color:rgba(93,160,255,.55);transform:translateY(-3px)}
 .news-section-index{font-size:8px;letter-spacing:2.5px;color:#5da0ff;font-weight:800;display:block}
@@ -268,7 +268,7 @@ body.modal-open{overflow:hidden}
 .news-division-card h3 em,.news-brigade-card h3 em{font-style:normal;color:#b52b3f}
 .news-division-card p{margin:0;color:#7f91a3;font-size:9px;letter-spacing:2px;position:relative;z-index:1}
 .news-card-arrow{font-size:24px;color:#5da0ff;align-self:end}
-.news-brigade-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.news-brigade-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(300px,1fr));gap:16px}
 .news-brigade-card{min-height:300px;border:1px solid rgba(255,255,255,.13);background:linear-gradient(145deg,#101822,#080c12);color:#fff;text-align:left;padding:28px;cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;transition:.2s}
 .news-brigade-card h3{font:900 clamp(42px,5vw,70px)/.8 'Barlow Condensed';margin:15px 0 18px;letter-spacing:-1px}
 .news-brigade-card>span:nth-of-type(2){font-size:8px;letter-spacing:2px;color:#718397}
@@ -289,9 +289,21 @@ body.modal-open{overflow:hidden}
 .news-section-story h4{font:900 32px/.9 'Barlow Condensed';margin:9px 0}
 .news-section-story p{font-size:11px;line-height:1.6;color:#8292a2;margin:0}
 .news-section-story time{font-size:8px;letter-spacing:1px;color:#7d8da0;white-space:nowrap;text-align:right}
-@media(max-width:900px){.news-section-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.news-brigade-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(250px,1fr))}}
 @media(max-width:650px){
-.news-sections{gap:40px}
+.news-division-card{min-height:165px;padding:24px}
+.news-division-card h3{font-size:48px}
+.news-brigade-grid{grid-template-columns:1fr;grid-template-rows:none}
+.news-brigade-card{min-height:240px}
+.news-section-modal{padding:12px}
+.news-section-modal-box{padding:30px 24px;max-height:92vh}
+.news-section-story{grid-template-columns:1fr;gap:12px}
+.news-section-story time{text-align:left}
+.news-section-story h4{font-size:29px}
+.news-article-modal{padding:12px}
+.news-article-box{padding:30px 24px;max-height:92vh}
+.news-article-box h3{font-size:48px;margin-top:45px}
+}
 .news-section-head{display:block}
 .news-section-head h3{text-align:left;margin-top:10px}
 .news-section-grid{grid-template-columns:1fr}
