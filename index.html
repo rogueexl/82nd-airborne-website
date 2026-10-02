@@ -73,20 +73,7 @@
 <section id="recruit" class="join"><div><span class="index">04 / PERSONNEL</span><h2>FIND YOUR<br><em>DROP ZONE.</em></h2><p>Choose a brigade, find your role, and become part of the division.</p></div><a class="btn red" href="#">RECRUITMENT <b>↗</b></a></section>
 
 
-<section id="music" class="music-section">
-<div class="section-head"><div><span class="index">07 / AIRBORNE RADIO</span><h2>THE<br><em>MUSIC.</em></h2></div><p>A long-form military music playlist for the site. Start a track, keep browsing, and let the music run while you explore the division.</p></div>
-<div class="music-console">
-<div class="music-player">
-<div class="music-player-head"><div><span>NOW PLAYING // AIRBORNE RADIO</span><strong>AMERICAN MARCHES</strong></div><span class="music-live"><i></i> STREAMING</span></div>
-<div class="music-video"><iframe id="music-frame" src="https://www.youtube-nocookie.com/embed/GIN16wveer8?rel=0&modestbranding=1" title="American military marches playlist" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
-<div class="music-player-foot"><span>FEATURED MIX // AMERICAN MILITARY MARCHES</span><a href="https://www.youtube.com/watch?v=GIN16wveer8" target="_blank" rel="noopener">OPEN IN YOUTUBE ↗</a></div>
-</div>
-<div class="music-list">
-<div class="music-list-head"><span>TRACK INDEX</span><span>20 SELECTIONS</span></div>
-<div class="music-track active" data-video="GIN16wveer8"><b>01</b><span>American Marches — Featured Mix</span><small>PLAY</small></div><div class="music-track " data-video="GIN16wveer8"><b>02</b><span>America the Beautiful</span><small>CLASSIC</small></div><div class="music-track " data-video="GIN16wveer8"><b>03</b><span>Anchors Aweigh</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>04</b><span>Ceremonial Medley</span><small>CEREMONIAL</small></div><div class="music-track " data-video="GIN16wveer8"><b>05</b><span>Stars and Stripes Forever</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>06</b><span>Emperor's Maneuver</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>07</b><span>Fix Bayonets</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>08</b><span>General Heywood</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>09</b><span>Hands Across the Sea</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>10</b><span>In God We Trust</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>11</b><span>Jack Tar</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>12</b><span>National Emblem</span><small>ARMY BAND</small></div><div class="music-track " data-video="GIN16wveer8"><b>13</b><span>Naval Academy March</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>14</b><span>Rifle Regiment</span><small>MARCH</small></div><div class="music-track " data-video="GIN16wveer8"><b>15</b><span>The Star-Spangled Banner</span><small>ANTHEM</small></div><div class="music-track " data-video="GIN16wveer8"><b>16</b><span>The Thunderer</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>17</b><span>Washington Post March</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>18</b><span>Semper Fidelis</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>19</b><span>Liberty Bell March</span><small>SOUSA</small></div><div class="music-track " data-video="GIN16wveer8"><b>20</b><span>March Grandioso</span><small>CLASSIC</small></div>
-</div></div>
-<div class="music-note"><span>ARMY CEREMONIAL ARCHIVE</span><a href="https://usarmyband.com/ceremonial-music-guide" target="_blank" rel="noopener">VIEW FREE CEREMONIAL MUSIC COLLECTION ↗</a></div>
-</section>
+
 
 <section id="reviews" class="reviews">
 <div class="section-head"><div><span class="index">06 / DIVISION REVIEWS</span><h2>HEAR FROM<br><em>THE RANKS.</em></h2></div><p>Verified personnel can share their experience with the 82nd Airborne Division. Roblox account verification is required to submit a review.</p></div>
@@ -243,4 +230,30 @@ loadReviews();
   document.addEventListener('keydown',e => { if(e.key === 'Escape' && modal.classList.contains('is-open')) close(); });
 })();
 </script>
-<script>document.querySelectorAll(".music-track").forEach(track=>track.addEventListener("click",()=>{document.querySelectorAll(".music-track").forEach(t=>t.classList.remove("active"));track.classList.add("active");document.getElementById("music-frame").src="https://www.youtube-nocookie.com/embed/GIN16wveer8?autoplay=1&rel=0&modestbranding=1";}));</script></body></html>
+<script>document.querySelectorAll(".music-track").forEach(track=>track.addEventListener("click",()=>{document.querySelectorAll(".music-track").forEach(t=>t.classList.remove("active"));track.classList.add("active");document.getElementById("music-frame").src="https://www.youtube-nocookie.com/embed/GIN16wveer8?autoplay=1&rel=0&modestbranding=1";}));</script><div class="mini-radio" id="mini-radio" aria-label="Airborne Radio music player">
+<div class="mini-radio-title"><span>82ND RADIO</span><b id="mini-track-name">American Marches</b></div>
+<div class="mini-radio-controls">
+<button id="mini-prev" type="button" aria-label="Previous track">◀</button>
+<button id="mini-play" type="button" aria-label="Play or pause">▶</button>
+<button id="mini-next" type="button" aria-label="Next track">▶</button>
+</div>
+<div class="mini-radio-volume"><span>VOL</span><input id="mini-volume" type="range" min="0" max="1" step="0.01" value="0.65" aria-label="Volume"></div>
+<a id="mini-open" href="https://www.youtube.com/watch?v=GIN16wveer8" target="_blank" rel="noopener" aria-label="Open current track">↗</a>
+</div><script>
+const miniTracks=[
+["American Marches","https://www.youtube-nocookie.com/embed/GIN16wveer8?autoplay=1&rel=0&modestbranding=1","https://www.youtube.com/watch?v=GIN16wveer8"],
+["The Army Goes Rolling Along","https://www.youtube-nocookie.com/embed/i_dJXHEM37E?autoplay=1&rel=0&modestbranding=1","https://www.youtube.com/watch?v=i_dJXHEM37E"],
+["Stars and Stripes Forever","https://www.youtube-nocookie.com/embed/GIN16wveer8?autoplay=1&rel=0&modestbranding=1","https://www.youtube.com/watch?v=GIN16wveer8"]
+];
+let miniIndex=0, miniPlaying=true;
+const miniName=document.getElementById("mini-track-name"), miniOpen=document.getElementById("mini-open"), miniPlay=document.getElementById("mini-play");
+const miniAudio=document.createElement("iframe");
+miniAudio.id="mini-audio-frame"; miniAudio.allow="autoplay; encrypted-media"; miniAudio.style.display="none";
+document.body.appendChild(miniAudio);
+function miniLoad(i,play=true){miniIndex=(i+miniTracks.length)%miniTracks.length;const t=miniTracks[miniIndex];miniName.textContent=t[0];miniOpen.href=t[2];miniAudio.src=t[1];miniPlaying=play;miniPlay.textContent=play?"❚❚":"▶";}
+document.getElementById("mini-prev").onclick=()=>miniLoad(miniIndex-1);
+document.getElementById("mini-next").onclick=()=>miniLoad(miniIndex+1);
+miniPlay.onclick=()=>{if(miniPlaying){miniAudio.src=miniTracks[miniIndex][1].replace("autoplay=1","autoplay=0");miniPlaying=false;miniPlay.textContent="▶";}else{miniAudio.src=miniTracks[miniIndex][1];miniPlaying=true;miniPlay.textContent="❚❚";}};
+document.getElementById("mini-volume").addEventListener("input",e=>{});
+miniLoad(0);
+</script></body></html>
