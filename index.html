@@ -99,7 +99,8 @@
   <div><span class="index">05 / DIVISION NEWS</span><h2>THE LATEST<br><em>FROM THE AIRBORNE.</em></h2></div>
   <p>Division announcements, updates, developments, and stories from across the 82nd Airborne Division.</p>
 </div>
-<div class="news-grid" id="news-list"><article class="news-card news-feature"><div class="news-meta"><span>DIVISION UPDATE</span><time>LATEST</time></div><h3>LOADING<br><em>NEWS.</em></h3><p>Loading the latest division news.</p></article></div>
+<div id="news-list" class="news-sections"><section class="news-section" data-section="division"><div class="news-section-head"><span class="news-section-index">01 / DIVISION WIDE</span><h3>DIVISION<br><em>NEWS.</em></h3></div><div class="news-section-grid" id="news-division"></div></section><section class="news-section" data-section="falcon"><div class="news-section-head"><span class="news-section-index">02 / FALCON BRIGADE</span><h3>FALCON<br><em>BRIGADE.</em></h3></div><div class="news-section-grid" id="news-falcon"></div></section><section class="news-section" data-section="panther"><div class="news-section-head"><span class="news-section-index">03 / PANTHER BRIGADE</span><h3>PANTHER<br><em>BRIGADE.</em></h3></div><div class="news-section-grid" id="news-panther"></div></section><section class="news-section" data-section="black-hats"><div class="news-section-head"><span class="news-section-index">04 / BLACK HATS BRIGADE</span><h3>BLACK HATS<br><em>BRIGADE.</em></h3></div><div class="news-section-grid" id="news-black-hats"></div></section><section class="news-section" data-section="pegasus"><div class="news-section-head"><span class="news-section-index">05 / PEGASUS BRIGADE</span><h3>PEGASUS<br><em>BRIGADE.</em></h3></div><div class="news-section-grid" id="news-pegasus"></div></section></div>
+<div class="news-article-modal" id="news-article-modal" aria-hidden="true"><div class="news-article-backdrop" data-close-news></div><article class="news-article-box"><button class="news-article-close" type="button" data-close-news aria-label="Close">×</button><div class="news-article-meta"><span id="article-category"></span><time id="article-date"></time></div><h3 id="article-title"></h3><p class="news-article-summary" id="article-summary"></p><div class="news-article-body" id="article-body"></div></article></div>
 <section id="propaganda" class="propaganda">
 <div class="archive-head"><div><span class="index">05 / AIRBORNE PROPAGANDA</span><h2>PROPAGANDA<br><em>SECTION.</em></h2></div><p>This section is currently being rebuilt with original 82nd Airborne propaganda and division media.</p></div>
 <div class="propaganda-build">
@@ -131,18 +132,50 @@ function setReviewStatus(message, good=false){
 
 
 async function loadNews(){
+  const sectionMap={division:'news-division',falcon:'news-falcon',panther:'news-panther','black-hats':'news-black-hats',pegasus:'news-pegasus'};
   const list=document.getElementById('news-list');
   if(!list)return;
   try{
-    const res=await fetch(SUPABASE_URL+'/rest/v1/news?select=id,title,category,summary,created_at&published=eq.true&order=created_at.desc&limit=6',{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}});
+    const res=await fetch(SUPABASE_URL+'/rest/v1/news?select=id,title,category,summary,body,created_at&published=eq.true&order=created_at.desc&limit=100',{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}});
     if(!res.ok)throw new Error();
     const rows=await res.json();
-    if(!rows.length){list.innerHTML='<article class="news-card news-feature"><div class="news-meta"><span>DIVISION NEWS</span><time>UPDATING</time></div><h3>NEWS<br><em>COMING SOON.</em></h3><p>New division updates will appear here as they are published.</p></article>';return;}
     const esc=v=>String(v||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
     const date=v=>new Date(v).toLocaleDateString('en-US',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
-    list.innerHTML=rows.map((r,i)=>'<article class="news-card '+(i===0?'news-feature':'')+'"><div class="news-meta"><span>'+esc(r.category)+'</span><time>'+date(r.created_at)+'</time></div><h3>'+esc(r.title).replace(/\n/g,'<br>')+'</h3><p>'+esc(r.summary)+'</p><span class="news-read">'+(i===0?'LATEST UPDATE':'DIVISION NEWS')+' <b>↗</b></span></article>').join('');
+    Object.values(sectionMap).forEach(id=>{document.getElementById(id).innerHTML='';});
+    rows.forEach((r)=>{
+      const raw=String(r.category||'').toLowerCase();
+      const section=raw.includes('falcon')?'falcon':raw.includes('panther')?'panther':raw.includes('black hats')||raw.includes('black-hats')?'black-hats':raw.includes('pegasus')?'pegasus':'division';
+      const target=document.getElementById(sectionMap[section]);
+      if(!target)return;
+      const card=document.createElement('article');
+      card.className='news-card';
+      card.dataset.id=r.id;
+      card.innerHTML='<div class="news-meta"><span>'+esc(r.category||'DIVISION NEWS')+'</span><time>'+date(r.created_at)+'</time></div><h4>'+esc(r.title).replace(/\\n/g,'<br>')+'</h4><p>'+esc(r.summary)+'</p><span class="news-read">READ STORY <b>↗</b></span>';
+      card.addEventListener('click',()=>openNewsArticle(r));
+      target.appendChild(card);
+    });
+    Object.entries(sectionMap).forEach(([key,id])=>{
+      const grid=document.getElementById(id);
+      if(!grid.children.length)grid.innerHTML='<div class="news-empty">NO STORIES PUBLISHED IN THIS SECTION YET.</div>';
+    });
   }catch(e){console.warn('News could not load',e);}
 }
+
+function openNewsArticle(r){
+  document.getElementById('article-category').textContent=r.category||'DIVISION NEWS';
+  document.getElementById('article-date').textContent=new Date(r.created_at).toLocaleDateString('en-US',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
+  document.getElementById('article-title').textContent=r.title||'';
+  document.getElementById('article-summary').textContent=r.summary||'';
+  document.getElementById('article-body').textContent=r.body||r.summary||'';
+  const modal=document.getElementById('news-article-modal');
+  modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.classList.add('news-modal-open');
+}
+function closeNewsArticle(){
+  const modal=document.getElementById('news-article-modal');
+  modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('news-modal-open');
+}
+document.querySelectorAll('[data-close-news]').forEach(el=>el.addEventListener('click',closeNewsArticle));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeNewsArticle();});
 
 async function loadReviews(){
   try{
