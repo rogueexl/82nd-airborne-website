@@ -255,13 +255,17 @@ const miniName=document.getElementById("mini-track-name");
 const miniPlay=document.getElementById("mini-play");
 const miniVolume=document.getElementById("mini-volume");
 let miniSecretClicks=0, miniSecretTimer=null;
+const miniSecretTrack=["Rickroll // Secret Track","https://www.newgrounds.com/audio/listen/1552440"];
 miniName.addEventListener("click",()=>{
   miniSecretClicks++;
   clearTimeout(miniSecretTimer);
   miniSecretTimer=setTimeout(()=>miniSecretClicks=0,1200);
   if(miniSecretClicks>=5){
     miniSecretClicks=0;
-    window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ","_blank","noopener,noreferrer");
+    miniName.textContent=miniSecretTrack[0];
+    miniAudio.src=miniSecretTrack[1];
+    miniAudio.volume=Number(miniVolume.value);
+    miniAudio.play().catch(()=>{});
   }
 });
 function miniLoad(i,autoplay=false){
