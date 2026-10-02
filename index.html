@@ -97,27 +97,7 @@
   <div><span class="index">05 / DIVISION NEWS</span><h2>THE LATEST<br><em>FROM THE AIRBORNE.</em></h2></div>
   <p>Division announcements, updates, developments, and stories from across the 82nd Airborne Division.</p>
 </div>
-<div class="news-grid">
-  <article class="news-card news-feature">
-    <div class="news-meta"><span>DIVISION UPDATE</span><time>01 OCT 2026</time></div>
-    <h3>82ND AIRBORNE WEBSITE<br><em>NOW ONLINE.</em></h3>
-    <p>The official 82nd Airborne Division website is now live, bringing division information, brigade structure, command, reviews, and future updates into one central hub.</p>
-    <span class="news-read">LATEST UPDATE <b>↗</b></span>
-  </article>
-  <article class="news-card">
-    <div class="news-meta"><span>DIVISION</span><time>RECENT</time></div>
-    <h3>FOUR BRIGADES.<br><em>ONE DIVISION.</em></h3>
-    <p>Explore Falcon, Panther, Black Hats, and Pegasus — each with its own mission and place within the division.</p>
-    <a class="news-read" href="#brigades">VIEW BRIGADES <b>↗</b></a>
-  </article>
-  <article class="news-card">
-    <div class="news-meta"><span>COMMUNITY</span><time>RECENT</time></div>
-    <h3>HAVE SOMETHING<br><em>TO SAY?</em></h3>
-    <p>Share your experience with the division through the public review section and help shape what comes next.</p>
-    <a class="news-read" href="#reviews">LEAVE FEEDBACK <b>↗</b></a>
-  </article>
-</div>
-</section>
+<div class="news-grid" id="news-list"><article class="news-card news-feature"><div class="news-meta"><span>DIVISION UPDATE</span><time>LATEST</time></div><h3>LOADING<br><em>NEWS.</em></h3><p>Loading the latest division news.</p></article></div>
 <section id="propaganda" class="propaganda">
 <div class="archive-head"><div><span class="index">05 / AIRBORNE PROPAGANDA</span><h2>PROPAGANDA<br><em>SECTION.</em></h2></div><p>This section is currently being rebuilt with original 82nd Airborne propaganda and division media.</p></div>
 <div class="propaganda-build">
@@ -147,7 +127,21 @@ function setReviewStatus(message, good=false){
   reviewStatus.className = good ? 'good' : '';
 }
 
-async function loadReviews(){
+
+async function loadNews(){
+  const list=document.getElementById('news-list');
+  if(!list)return;
+  try{
+    const res=await fetch(SUPABASE_URL+'/rest/v1/news?select=id,title,category,summary,created_at&published=eq.true&order=created_at.desc&limit=6',{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}});
+    if(!res.ok)throw new Error();
+    const rows=await res.json();
+    if(!rows.length){list.innerHTML='<article class="news-card news-feature"><div class="news-meta"><span>DIVISION NEWS</span><time>UPDATING</time></div><h3>NEWS<br><em>COMING SOON.</em></h3><p>New division updates will appear here as they are published.</p></article>';return;}
+    const esc=v=>String(v||'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    const date=v=>new Date(v).toLocaleDateString('en-US',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+    list.innerHTML=rows.map((r,i)=>'<article class="news-card '+(i===0?'news-feature':'')+'"><div class="news-meta"><span>'+esc(r.category)+'</span><time>'+date(r.created_at)+'</time></div><h3>'+esc(r.title).replace(/\n/g,'<br>')+'</h3><p>'+esc(r.summary)+'</p><span class="news-read">'+(i===0?'LATEST UPDATE':'DIVISION NEWS')+' <b>↗</b></span></article>').join('');
+  }catch(e){console.warn('News could not load',e);}
+}
+\nasync function loadReviews(){
   try{
     const res = await fetch(SUPABASE_URL+'/rest/v1/reviews?select=roblox_username,rating,review_text,roblox_user_id,created_at&status=eq.approved&order=created_at.desc', {
       headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}
@@ -208,7 +202,7 @@ reviewButton.addEventListener('click', async ()=>{
   }
 });
 
-loadReviews();
+loadNews();\nloadReviews();
 </script>
 <script>
 (() => {
