@@ -277,4 +277,20 @@ miniAudio.addEventListener("play",()=>miniPlay.textContent="❚❚");
 miniAudio.addEventListener("pause",()=>miniPlay.textContent="▶");
 miniAudio.addEventListener("ended",()=>miniLoad(miniIndex+1,true));
 miniLoad(0,true);
-</script></body></html>
+</script><script>
+(function(){
+  let clicks=0,timer=null;
+  document.addEventListener("click",function(e){
+    const target=e.target.closest(".site-easter-egg");
+    if(!target)return;
+    clicks++;
+    clearTimeout(timer);
+    timer=setTimeout(()=>clicks=0,1400);
+    if(clicks>=5){
+      clicks=0;
+      window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ","_blank","noopener,noreferrer");
+    }
+  });
+})();
+</script>
+</body></html>
