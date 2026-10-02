@@ -141,7 +141,8 @@ async function loadNews(){
     list.innerHTML=rows.map((r,i)=>'<article class="news-card '+(i===0?'news-feature':'')+'"><div class="news-meta"><span>'+esc(r.category)+'</span><time>'+date(r.created_at)+'</time></div><h3>'+esc(r.title).replace(/\n/g,'<br>')+'</h3><p>'+esc(r.summary)+'</p><span class="news-read">'+(i===0?'LATEST UPDATE':'DIVISION NEWS')+' <b>↗</b></span></article>').join('');
   }catch(e){console.warn('News could not load',e);}
 }
-\nasync function loadReviews(){
+
+async function loadReviews(){
   try{
     const res = await fetch(SUPABASE_URL+'/rest/v1/reviews?select=roblox_username,rating,review_text,roblox_user_id,created_at&status=eq.approved&order=created_at.desc', {
       headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}
@@ -202,7 +203,8 @@ reviewButton.addEventListener('click', async ()=>{
   }
 });
 
-loadNews();\nloadReviews();
+loadNews();
+loadReviews();
 </script>
 <script>
 (() => {
