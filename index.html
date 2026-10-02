@@ -231,29 +231,50 @@ loadReviews();
 })();
 </script>
 <script>document.querySelectorAll(".music-track").forEach(track=>track.addEventListener("click",()=>{document.querySelectorAll(".music-track").forEach(t=>t.classList.remove("active"));track.classList.add("active");document.getElementById("music-frame").src="https://www.youtube-nocookie.com/embed/GIN16wveer8?autoplay=1&rel=0&modestbranding=1";}));</script><div class="mini-radio" id="mini-radio" aria-label="Airborne Radio music player">
-<div class="mini-radio-title"><span>82ND RADIO</span><b id="mini-track-name">American Marches</b></div>
+<div class="mini-radio-title"><span>82ND RADIO</span><b id="mini-track-name">The Stars and Stripes Forever</b></div>
 <div class="mini-radio-controls">
 <button id="mini-prev" type="button" aria-label="Previous track">◀</button>
 <button id="mini-play" type="button" aria-label="Play or pause">▶</button>
 <button id="mini-next" type="button" aria-label="Next track">▶</button>
 </div>
 <div class="mini-radio-volume"><span>VOL</span><input id="mini-volume" type="range" min="0" max="1" step="0.01" value="0.65" aria-label="Volume"></div>
-<a id="mini-open" href="https://www.youtube.com/watch?v=GIN16wveer8" target="_blank" rel="noopener" aria-label="Open current track">↗</a>
-</div><script>
+</div>
+<audio id="mini-audio" preload="metadata"></audio>
+<script>
 const miniTracks=[
-["American Marches","https://www.youtube-nocookie.com/embed/GIN16wveer8?autoplay=1&rel=0&modestbranding=1","https://www.youtube.com/watch?v=GIN16wveer8"],
-["The Army Goes Rolling Along","https://www.youtube-nocookie.com/embed/i_dJXHEM37E?autoplay=1&rel=0&modestbranding=1","https://www.youtube.com/watch?v=i_dJXHEM37E"],
-["Stars and Stripes Forever","https://www.youtube-nocookie.com/embed/GIN16wveer8?autoplay=1&rel=0&modestbranding=1","https://www.youtube.com/watch?v=GIN16wveer8"]
+["The Stars and Stripes Forever","https://upload.wikimedia.org/wikipedia/commons/1/19/The_Stars_and_Stripes_Forever_-_U.S._Army_Band.ogg"],
+["The Thunderer","https://upload.wikimedia.org/wikipedia/commons/8/8d/The_Thunderer_-_U.S._Army_Band.ogg"],
+["The Army Goes Rolling Along","https://upload.wikimedia.org/wikipedia/commons/4/4e/The_Army_Goes_Rolling_Along_-_U.S._Army_Band.ogg"],
+["National Emblem March","https://upload.wikimedia.org/wikipedia/commons/8/82/National_Emblem_-_U.S._Army_Band.ogg"],
+["The Invincible Eagle","https://upload.wikimedia.org/wikipedia/commons/6/6f/The_Invincible_Eagle_-_U.S._Army_Band.ogg"],
+["Washington Post March","https://upload.wikimedia.org/wikipedia/commons/7/79/Washington_Post_March_-_U.S._Army_Band.ogg"]
 ];
-let miniIndex=0, miniPlaying=true;
-const miniName=document.getElementById("mini-track-name"), miniOpen=document.getElementById("mini-open"), miniPlay=document.getElementById("mini-play");
-const miniAudio=document.createElement("iframe");
-miniAudio.id="mini-audio-frame"; miniAudio.allow="autoplay; encrypted-media"; miniAudio.style.display="none";
-document.body.appendChild(miniAudio);
-function miniLoad(i,play=true){miniIndex=(i+miniTracks.length)%miniTracks.length;const t=miniTracks[miniIndex];miniName.textContent=t[0];miniOpen.href=t[2];miniAudio.src=t[1];miniPlaying=play;miniPlay.textContent=play?"❚❚":"▶";}
-document.getElementById("mini-prev").onclick=()=>miniLoad(miniIndex-1);
-document.getElementById("mini-next").onclick=()=>miniLoad(miniIndex+1);
-miniPlay.onclick=()=>{if(miniPlaying){miniAudio.src=miniTracks[miniIndex][1].replace("autoplay=1","autoplay=0");miniPlaying=false;miniPlay.textContent="▶";}else{miniAudio.src=miniTracks[miniIndex][1];miniPlaying=true;miniPlay.textContent="❚❚";}};
-document.getElementById("mini-volume").addEventListener("input",e=>{});
-miniLoad(0);
+let miniIndex=0;
+const miniAudio=document.getElementById("mini-audio");
+const miniName=document.getElementById("mini-track-name");
+const miniPlay=document.getElementById("mini-play");
+const miniVolume=document.getElementById("mini-volume");
+function miniLoad(i,autoplay=false){
+ miniIndex=(i+miniTracks.length)%miniTracks.length;
+ miniName.textContent=miniTracks[miniIndex][0];
+ miniAudio.src=miniTracks[miniIndex][1];
+ miniAudio.volume=Number(miniVolume.value);
+ miniPlay.textContent="▶";
+ if(autoplay){miniAudio.play().then(()=>miniPlay.textContent="❚❚").catch(()=>{});}
+}
+document.getElementById("mini-prev").onclick=()=>miniLoad(miniIndex-1,true);
+document.getElementById("mini-next").onclick=()=>miniLoad(miniIndex+1,true);
+miniPlay.onclick=async()=>{
+ if(miniAudio.paused){
+   try{await miniAudio.play();miniPlay.textContent="❚❚";}catch(e){}
+ }else{
+   miniAudio.pause();
+   miniPlay.textContent="▶";
+ }
+};
+miniVolume.addEventListener("input",()=>{miniAudio.volume=Number(miniVolume.value);});
+miniAudio.addEventListener("play",()=>miniPlay.textContent="❚❚");
+miniAudio.addEventListener("pause",()=>miniPlay.textContent="▶");
+miniAudio.addEventListener("ended",()=>miniLoad(miniIndex+1,true));
+miniLoad(0,true);
 </script></body></html>
