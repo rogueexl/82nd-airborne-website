@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>82ND // NEWS MANAGER</title>
+<link rel="icon" href="https://commons.wikimedia.org/wiki/Special:Redirect/file/82_ABD_SSI.svg">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05070a;--panel:#0b1016;--line:rgba(255,255,255,.11);--white:#f2f5f7;--muted:#8b9aaa;--blue:#3d8cff;--red:#b52b3f}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 10%,rgba(61,140,255,.12),transparent 30%),var(--bg);color:var(--white);font-family:Barlow,sans-serif}.wrap{width:min(1050px,92%);margin:auto;padding:55px 0 90px}.eyebrow{color:#5da0ff;font-size:9px;letter-spacing:3px;font-weight:800}.top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:22px}.top h1{font:900 clamp(40px,7vw,72px)/.8 'Barlow Condensed';margin:18px 0}.top a{color:#aab6c2;text-decoration:none;font-size:11px;letter-spacing:1px}.panel{margin-top:35px;border:1px solid var(--line);background:rgba(11,16,22,.9);padding:30px}.panel h2{font:900 38px 'Barlow Condensed';margin:0 0 25px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}label{font-size:9px;letter-spacing:2px;color:#7890a7;font-weight:700}input,textarea,select{border:1px solid var(--line);background:#070b10;color:var(--white);padding:13px;font:inherit;outline:none}textarea{min-height:160px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--blue)}button{border:1px solid #c24659;background:var(--red);color:#fff;padding:13px 20px;font-weight:800;letter-spacing:1px;cursor:pointer}.actions{display:flex;gap:12px;align-items:center;margin-top:20px}#status{font-size:11px;color:#9eabb8}#status.good{color:#68d49a}.items{margin-top:35px}.item{border-top:1px solid var(--line);padding:20px 0;display:flex;justify-content:space-between;gap:20px}.item h3{font:800 28px 'Barlow Condensed';margin:0 0 5px}.item p{color:#8f9eac;margin:0;font-size:13px}.delete{background:transparent;border-color:rgba(255,255,255,.15);color:#aab6c2;padding:8px 12px}@media(max-width:650px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.item{display:block}.delete{margin-top:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div><span class="eyebrow">82ND AIRBORNE // CONTENT CONTROL</span><h1>NEWS<br>MANAGER.</h1></div><a href="./index.html">← RETURN TO SITE</a></header>
+<section class="panel" id="authPanel"><h2>ADMIN ACCESS</h2><div class="grid"><div class="field"><label>EMAIL</label><input id="email" type="email" autocomplete="email"></div><div class="field"><label>PASSWORD</label><input id="password" type="password" autocomplete="current-password"></div></div><div class="actions"><button id="login">SIGN IN</button><span id="authStatus">Sign in to manage published news.</span></div></section>
+<section class="panel" id="editor" hidden><h2>PUBLISH NEWS</h2><div class="grid">
+<div class="field full"><label>HEADLINE</label><input id="title" maxlength="160" placeholder="Enter the article headline"></div>
+<div class="field"><label>CATEGORY</label><input id="category" maxlength="40" value="DIVISION UPDATE"></div>
+<div class="field"><label>STATUS</label><select id="published"><option value="true">PUBLISHED</option><option value="false">DRAFT</option></select></div>
+<div class="field full"><label>SUMMARY</label><textarea id="summary" maxlength="600" placeholder="Short description shown on the homepage"></textarea></div>
+<div class="field full"><label>ARTICLE BODY (OPTIONAL)</label><textarea id="body" placeholder="Full article text for future article pages"></textarea></div>
+</div><div class="actions"><button id="publish">PUBLISH NEWS</button><span id="status"></span></div></section>
+<section class="panel items" id="items" hidden><h2>RECENT NEWS</h2><div id="list"></div></section>
+</div>
+<script>
+const URL='https://ypmflmivzjptkitqdowj.supabase.co', KEY='sb_publishable_7u7ow0A7-YbvgLOc_r8StQ_MENpi4uj';
+let token='';
+const authStatus=document.getElementById('authStatus'), status=document.getElementById('status');
+async function api(path,opt={}){opt.headers={...(opt.headers||{}),apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'};return fetch(URL+'/rest/v1/'+path,opt)}
+async function load(){
+ const r=await api('news?select=id,title,category,summary,published,created_at&order=created_at.desc');
+ const rows=await r.json(); document.getElementById('list').innerHTML=rows.map(x=>'<div class="item"><div><h3>'+esc(x.title)+'</h3><p>'+esc(x.category)+' // '+(x.published?'PUBLISHED':'DRAFT')+'</p></div><button class="delete" data-id="'+x.id+'">DELETE</button></div>').join('');
+ document.querySelectorAll('.delete').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this news post?'))return;await api('news?id=eq.'+b.dataset.id,{method:'DELETE'});load()});
+}
+document.getElementById('login').onclick=async()=>{
+ const r=await fetch(URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:password.value})});
+ const d=await r.json(); if(!r.ok){authStatus.textContent=d.error_description||'Sign in failed.';return}
+ token=d.access_token; authStatus.textContent='SIGNED IN';document.getElementById('authPanel').hidden=true;document.getElementById('editor').hidden=false;document.getElementById('items').hidden=false;load();
+};
+document.getElementById('publish').onclick=async()=>{
+ status.textContent='PUBLISHING...'; const r=await api('news',{method:'POST',body:JSON.stringify({title:title.value.trim(),category:category.value.trim(),summary:summary.value.trim(),body:body.value,published:published.value==='true'})});
+ if(!r.ok){status.textContent='Could not publish news.';return} status.textContent='PUBLISHED.';status.className='good';title.value='';summary.value='';body.value='';load();
+};
+function esc(v){return String(v||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+</script>
+</body></html>
