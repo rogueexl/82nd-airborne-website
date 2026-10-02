@@ -242,14 +242,43 @@ loadReviews();
 <audio id="mini-audio" preload="metadata"></audio>
 <script>
 const miniTracks=[
-["Blood Upon the Risers // Original Instrumental",null],
 ["The Stars and Stripes Forever","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Stars_and_Stripes_Forever_-_U.S._Army_Band.ogg"],
 ["The Thunderer","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Thunderer_-_U.S._Army_Band.ogg"],
-["The Army Goes Rolling Along","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Army_Goes_Rolling_Along_-_U.S._Army_Band.ogg"],
+["Blood Upon the Risers — Instrumental (Original Arrangement)",null],
 ["National Emblem March","https://commons.wikimedia.org/wiki/Special:Redirect/file/National_Emblem_-_U.S._Army_Band.ogg"],
 ["The Invincible Eagle","https://commons.wikimedia.org/wiki/Special:Redirect/file/The_Invincible_Eagle_-_U.S._Army_Band.ogg"],
 ["Washington Post March","https://commons.wikimedia.org/wiki/Special:Redirect/file/Washington_Post_March_-_U.S._Army_Band.ogg"]
 ];
+
+async function buildBloodRisers(){
+  const sampleRate=22050,bpm=92,beat=60/bpm;
+  const notes={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+  const seq=[["G4",.75],["G4",.25],["G4",.75],["F4",.25],["E4",.75],["G4",.75],["C5",.75],["D5",.25],["E5",.75],["E5",.25],["E5",.75],["D5",.25],["C5",1.5],["C5",.75],["C5",.25],["A4",.75],["A4",.25],["B4",.75],["C5",.75],["B4",.75],["A4",.75],["G4",.75],["A4",.25],["G4",.75],["E4",.75],["G4",1.5]];
+  const freq=n=>440*Math.pow(2/Math.pow(2,0),((parseInt(n.slice(1))+1)*12+notes[n[0]]-69)/12);
+  const duration=seq.reduce((a,x)=>a+x[1],0)*beat;
+  const ctx=new OfflineAudioContext(1,Math.ceil((duration*2+1)*sampleRate),sampleRate);
+  const master=ctx.createGain(); master.gain.value=.42; master.connect(ctx.destination);
+  function tone(f,t,d,amp,type="sawtooth"){
+    const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;
+    g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(amp,t+.018);g.gain.setValueAtTime(amp,t+Math.max(.02,d-.07));g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(g).connect(master);o.start(t);o.stop(t+d);
+  }
+  for(let rep=0;rep<2;rep++){
+    let t=rep*duration;
+    for(const [n,d] of seq){tone(freq(n),t,d*beat*.96,.11,"sawtooth");t+=d*beat;}
+    for(let b=0;b<duration/beat;b+=.5){
+      const bt=rep*duration+b*beat;
+      if(Math.round(b)%3===0) tone(98,bt,.18,.16,"square");
+      if(Math.round(b)%3===2) tone(73.42,bt,.18,.12,"square");
+    }
+  }
+  const buf=await ctx.startRendering();
+  const wav=new ArrayBuffer(44+buf.length*2),dv=new DataView(wav);
+  const ws=(o,s)=>{for(let i=0;i<s.length;i++)dv.setUint8(o+i,s.charCodeAt(i));};
+  ws(0,"RIFF");dv.setUint32(4,36+buf.length*2,true);ws(8,"WAVE");ws(12,"fmt ");dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,1,true);dv.setUint32(24,sampleRate,true);dv.setUint32(28,sampleRate*2,true);dv.setUint16(32,2,true);dv.setUint16(34,16,true);ws(36,"data");dv.setUint32(40,buf.length*2,true);
+  const ch=buf.getChannelData(0);for(let i=0;i<ch.length;i++)dv.setInt16(44+i*2,Math.max(-1,Math.min(1,ch[i]))*32767,true);
+  return URL.createObjectURL(new Blob([wav],{type:"audio/wav"}));
+}
 let miniIndex=0;
 const miniAudio=document.getElementById("mini-audio");
 const miniName=document.getElementById("mini-track-name");
@@ -308,7 +337,7 @@ function miniLoad(i,autoplay=false){
  miniAudio.volume=Number(miniVolume.value);
  miniPlay.textContent="▶";
  if(miniTracks[miniIndex][1]){
-   miniAudio.src=miniTracks[miniIndex][1];
+   if(miniTracks[miniIndex][1]){miniAudio.src=miniTracks[miniIndex][1];}else{miniAudio.src="";buildBloodRisers().then(u=>{if(miniIndex===2){miniAudio.src=u;miniAudio.play().catch(()=>{});}});}
    if(autoplay)miniAudio.play().then(()=>miniPlay.textContent="❚❚").catch(()=>{});
  }else if(autoplay){
    playBloodUponRisers();
