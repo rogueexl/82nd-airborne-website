@@ -17,7 +17,7 @@
 <section class="panel" id="authPanel"><h2>ADMIN ACCESS</h2><div class="grid"><div class="field"><label>EMAIL</label><input id="email" type="email" autocomplete="email"></div><div class="field"><label>PASSWORD</label><input id="password" type="password" autocomplete="current-password"></div></div><div class="actions"><button id="login">SIGN IN</button><span id="authStatus">Sign in to manage published news.</span></div></section>
 <section class="panel" id="editor" hidden><h2>PUBLISH NEWS</h2><div class="grid">
 <div class="field full"><label>HEADLINE</label><input id="title" maxlength="160" placeholder="Enter the article headline"></div>
-<div class="field"><label>CATEGORY / BRIGADE</label><input id="category" maxlength="40" value="DIVISION WIDE" placeholder="e.g. FALCON BRIGADE"></div>
+<div class="field"><label>NEWS SECTION</label><select id="category"><option value="DIVISION WIDE">DIVISION WIDE</option><option value="FALCON BRIGADE">FALCON BRIGADE</option><option value="PANTHER BRIGADE">PANTHER BRIGADE</option><option value="BLACK HATS BRIGADE">BLACK HATS BRIGADE</option><option value="PEGASUS BRIGADE">PEGASUS BRIGADE</option></select></div>
 <div class="field"><label>STATUS</label><select id="published"><option value="true">PUBLISHED</option><option value="false">DRAFT</option></select></div>
 <div class="field full"><label>SUMMARY</label><textarea id="summary" maxlength="600" placeholder="Short description shown on the homepage"></textarea></div>
 <div class="field full"><label>ARTICLE BODY (OPTIONAL)</label><textarea id="body" placeholder="Full article text for future article pages"></textarea></div>
